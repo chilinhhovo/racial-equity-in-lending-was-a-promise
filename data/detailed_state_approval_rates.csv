@@ -1,0 +1,225 @@
+state_name,state_political_lean,race,approved,denied,total_applications,approval_rate
+Alabama,Republican State,American Indian or Alaska Native,11755,275,12030,97.71
+Alabama,Republican State,Asian,1362,31,1393,97.77
+Alabama,Republican State,Black,492,14,506,97.23
+Alaska,Republican State,American Indian or Alaska Native,1899,29,1928,98.5
+Alaska,Republican State,Black,137,2,139,98.56
+Alaska,Republican State,White,185,8,193,95.85
+Arizona,Republican State,American Indian or Alaska Native,35486,783,36269,97.84
+Arizona,Republican State,Asian,1156,27,1183,97.72
+Arizona,Republican State,Black,1858,47,1905,97.53
+Arizona,Republican State,White,304,7,311,97.75
+Arkansas,Republican State,American Indian or Alaska Native,7024,261,7285,96.42
+Arkansas,Republican State,Asian,431,17,448,96.21
+Arkansas,Republican State,Black,248,11,259,95.75
+California,Democratic State,American Indian or Alaska Native,89969,3468,93437,96.29
+California,Democratic State,Asian,3989,192,4181,95.41
+California,Democratic State,Black,30594,1336,31930,95.82
+California,Democratic State,Native Hawaiian,519,24,543,95.58
+California,Democratic State,White,942,25,967,97.41
+Colorado,Democratic State,American Indian or Alaska Native,32580,1104,33684,96.72
+Colorado,Democratic State,Asian,694,24,718,96.66
+Colorado,Democratic State,Black,1735,89,1824,95.12
+Colorado,Democratic State,White,229,10,239,95.82
+Connecticut,Democratic State,American Indian or Alaska Native,10731,242,10973,97.79
+Connecticut,Democratic State,Asian,723,23,746,96.92
+Connecticut,Democratic State,Black,726,22,748,97.06
+DC,Democratic State,American Indian or Alaska Native,13060,188,13248,98.58
+DC,Democratic State,Asian,4100,121,4221,97.13
+DC,Democratic State,Black,1583,33,1616,97.96
+DC,Democratic State,White,112,5,117,95.73
+Delaware,Democratic State,American Indian or Alaska Native,21746,427,22173,98.07
+Delaware,Democratic State,Asian,4211,128,4339,97.05
+Delaware,Democratic State,Black,2054,71,2125,96.66
+Delaware,Democratic State,White,159,4,163,97.55
+Florida,Republican State,American Indian or Alaska Native,613516,18145,631661,97.13
+Florida,Republican State,Asian,52640,2033,54673,96.28
+Florida,Republican State,Black,31051,1005,32056,96.86
+Florida,Republican State,Native Hawaiian,1005,30,1035,97.1
+Florida,Republican State,White,3627,105,3732,97.19
+Georgia,Democratic State,American Indian or Alaska Native,193308,5088,198396,97.44
+Georgia,Democratic State,Asian,47799,1870,49669,96.24
+Georgia,Democratic State,Black,30203,852,31055,97.26
+Georgia,Democratic State,Native Hawaiian,273,4,277,98.56
+Georgia,Democratic State,White,1394,42,1436,97.08
+Hawaii,Democratic State,American Indian or Alaska Native,9571,314,9885,96.82
+Hawaii,Democratic State,Asian,262,3,265,98.87
+Hawaii,Democratic State,Black,13185,355,13540,97.38
+Hawaii,Democratic State,Native Hawaiian,1580,63,1643,96.17
+Hawaii,Democratic State,White,281,9,290,96.9
+Idaho,Republican State,American Indian or Alaska Native,68118,4119,72237,94.3
+Idaho,Republican State,Asian,417,23,440,94.77
+Idaho,Republican State,Black,1461,115,1576,92.7
+Idaho,Republican State,Native Hawaiian,150,11,161,93.17
+Idaho,Republican State,White,634,50,684,92.69
+Illinois,Democratic State,American Indian or Alaska Native,286421,5715,292136,98.04
+Illinois,Democratic State,Asian,21928,807,22735,96.45
+Illinois,Democratic State,Black,31842,711,32553,97.82
+Illinois,Democratic State,Native Hawaiian,257,9,266,96.62
+Illinois,Democratic State,White,1719,42,1761,97.61
+Indiana,Republican State,American Indian or Alaska Native,173412,6012,179424,96.65
+Indiana,Republican State,Asian,9922,330,10252,96.78
+Indiana,Republican State,Black,11059,317,11376,97.21
+Indiana,Republican State,Native Hawaiian,137,6,143,95.8
+Indiana,Republican State,White,787,41,828,95.05
+Iowa,Democratic State,American Indian or Alaska Native,88049,1584,89633,98.23
+Iowa,Democratic State,Asian,2375,61,2436,97.5
+Iowa,Democratic State,Black,3242,62,3304,98.12
+Iowa,Democratic State,White,402,7,409,98.29
+Kansas,Republican State,American Indian or Alaska Native,59885,1590,61475,97.41
+Kansas,Republican State,Asian,1820,71,1891,96.25
+Kansas,Republican State,Black,3263,72,3335,97.84
+Kansas,Republican State,White,630,19,649,97.07
+Kentucky,Republican State,American Indian or Alaska Native,86501,1709,88210,98.06
+Kentucky,Republican State,Asian,4264,75,4339,98.27
+Kentucky,Republican State,Black,3495,66,3561,98.15
+Kentucky,Republican State,White,331,10,341,97.07
+Louisiana,Republican State,American Indian or Alaska Native,59050,1510,60560,97.51
+Louisiana,Republican State,Asian,8865,332,9197,96.39
+Louisiana,Republican State,Black,2949,68,3017,97.75
+Louisiana,Republican State,White,413,21,434,95.16
+Maine,Democratic State,American Indian or Alaska Native,29719,989,30708,96.78
+Maine,Democratic State,Asian,555,30,585,94.87
+Maine,Democratic State,Black,602,21,623,96.63
+Maine,Democratic State,White,132,1,133,99.25
+Maryland,Democratic State,American Indian or Alaska Native,106310,2119,108429,98.05
+Maryland,Democratic State,Asian,34680,1027,35707,97.12
+Maryland,Democratic State,Black,19403,446,19849,97.75
+Maryland,Democratic State,Native Hawaiian,259,6,265,97.74
+Maryland,Democratic State,White,891,19,910,97.91
+Massachusetts,Democratic State,American Indian or Alaska Native,145910,2589,148499,98.26
+Massachusetts,Democratic State,Asian,11525,255,11780,97.84
+Massachusetts,Democratic State,Black,21769,464,22233,97.91
+Massachusetts,Democratic State,Native Hawaiian,152,6,158,96.2
+Massachusetts,Democratic State,White,673,11,684,98.39
+Michigan,Democratic State,American Indian or Alaska Native,241045,5591,246636,97.73
+Michigan,Democratic State,Asian,14845,503,15348,96.72
+Michigan,Democratic State,Black,14271,426,14697,97.1
+Michigan,Democratic State,Native Hawaiian,160,1,161,99.38
+Michigan,Democratic State,White,1447,33,1480,97.77
+Minnesota,Democratic State,American Indian or Alaska Native,172414,2557,174971,98.54
+Minnesota,Democratic State,Asian,9652,193,9845,98.04
+Minnesota,Democratic State,Black,14666,293,14959,98.04
+Minnesota,Democratic State,Native Hawaiian,181,2,183,98.91
+Minnesota,Democratic State,White,1500,25,1525,98.36
+Mississippi,Republican State,American Indian or Alaska Native,30789,1298,32087,95.95
+Mississippi,Republican State,Asian,5790,389,6179,93.7
+Mississippi,Republican State,Black,1127,41,1168,96.49
+Mississippi,Republican State,White,171,4,175,97.71
+Missouri,Republican State,American Indian or Alaska Native,140859,3286,144145,97.72
+Missouri,Republican State,Asian,7557,299,7856,96.19
+Missouri,Republican State,Black,5423,150,5573,97.31
+Missouri,Republican State,Native Hawaiian,126,3,129,97.67
+Missouri,Republican State,White,984,23,1007,97.72
+Montana,Republican State,American Indian or Alaska Native,28420,463,28883,98.4
+Montana,Republican State,Asian,101,0,101,100.0
+Montana,Republican State,Black,341,3,344,99.13
+Montana,Republican State,White,362,4,366,98.91
+Nebraska,Democratic State,American Indian or Alaska Native,49069,845,49914,98.31
+Nebraska,Democratic State,Asian,1271,31,1302,97.62
+Nebraska,Democratic State,Black,2368,30,2398,98.75
+Nebraska,Democratic State,White,322,5,327,98.47
+Nevada,Democratic State,American Indian or Alaska Native,77876,3126,81002,96.14
+Nevada,Democratic State,Asian,5720,286,6006,95.24
+Nevada,Democratic State,Black,13960,575,14535,96.04
+Nevada,Democratic State,Native Hawaiian,787,31,818,96.21
+Nevada,Democratic State,White,921,38,959,96.04
+New Hampshire,Democratic State,American Indian or Alaska Native,39027,1088,40115,97.29
+New Hampshire,Democratic State,Asian,505,15,520,97.12
+New Hampshire,Democratic State,Black,1554,48,1602,97.0
+New Hampshire,Democratic State,White,157,9,166,94.58
+New Jersey,Democratic State,American Indian or Alaska Native,174866,5297,180163,97.06
+New Jersey,Democratic State,Asian,15948,679,16627,95.92
+New Jersey,Democratic State,Black,34669,1204,35873,96.64
+New Jersey,Democratic State,Native Hawaiian,264,9,273,96.7
+New Jersey,Democratic State,White,910,39,949,95.89
+New Mexico,Democratic State,American Indian or Alaska Native,35259,970,36229,97.32
+New Mexico,Democratic State,Asian,698,17,715,97.62
+New Mexico,Democratic State,Black,1508,47,1555,96.98
+New Mexico,Democratic State,White,882,36,918,96.08
+New York,Democratic State,American Indian or Alaska Native,256846,8093,264939,96.95
+New York,Democratic State,Asian,22542,1051,23593,95.55
+New York,Democratic State,Black,52488,2133,54621,96.09
+New York,Democratic State,Native Hawaiian,445,17,462,96.32
+New York,Democratic State,White,1343,52,1395,96.27
+North Carolina,Democratic State,American Indian or Alaska Native,258371,7219,265590,97.28
+North Carolina,Democratic State,Asian,35495,1172,36667,96.8
+North Carolina,Democratic State,Black,21701,794,22495,96.47
+North Carolina,Democratic State,Native Hawaiian,373,9,382,97.64
+North Carolina,Democratic State,White,2201,72,2273,96.83
+North Dakota,Republican State,American Indian or Alaska Native,17826,175,18001,99.03
+North Dakota,Republican State,Asian,275,3,278,98.92
+North Dakota,Republican State,Black,376,3,379,99.21
+North Dakota,Republican State,White,219,0,219,100.0
+Ohio,Republican State,American Indian or Alaska Native,267847,5926,273773,97.84
+Ohio,Republican State,Asian,18580,591,19171,96.92
+Ohio,Republican State,Black,15225,384,15609,97.54
+Ohio,Republican State,Native Hawaiian,294,12,306,96.08
+Ohio,Republican State,White,1025,33,1058,96.88
+Oklahoma,Republican State,American Indian or Alaska Native,62188,2406,64594,96.28
+Oklahoma,Republican State,Asian,2420,97,2517,96.15
+Oklahoma,Republican State,Black,3984,110,4094,97.31
+Oklahoma,Republican State,Native Hawaiian,109,4,113,96.46
+Oklahoma,Republican State,White,5164,269,5433,95.05
+Oregon,Democratic State,American Indian or Alaska Native,115385,3955,119340,96.69
+Oregon,Democratic State,Asian,2625,76,2701,97.19
+Oregon,Democratic State,Black,10254,370,10624,96.52
+Oregon,Democratic State,Native Hawaiian,390,9,399,97.74
+Oregon,Democratic State,White,1460,35,1495,97.66
+Pennsylvania,Democratic State,American Indian or Alaska Native,246319,5458,251777,97.83
+Pennsylvania,Democratic State,Asian,16108,524,16632,96.85
+Pennsylvania,Democratic State,Black,23646,721,24367,97.04
+Pennsylvania,Democratic State,Native Hawaiian,298,8,306,97.39
+Pennsylvania,Democratic State,White,1063,24,1087,97.79
+Rhode Island,Democratic State,American Indian or Alaska Native,24321,528,24849,97.88
+Rhode Island,Democratic State,Asian,1210,35,1245,97.19
+Rhode Island,Democratic State,Black,1057,26,1083,97.6
+Rhode Island,Democratic State,White,106,4,110,96.36
+South Carolina,Republican State,American Indian or Alaska Native,142717,4010,146727,97.27
+South Carolina,Republican State,Asian,11963,504,12467,95.96
+South Carolina,Republican State,Black,5190,152,5342,97.15
+South Carolina,Republican State,Native Hawaiian,132,5,137,96.35
+South Carolina,Republican State,White,766,45,811,94.45
+South Dakota,Republican State,American Indian or Alaska Native,20430,323,20753,98.44
+South Dakota,Republican State,Asian,266,4,270,98.52
+South Dakota,Republican State,Black,322,7,329,97.87
+South Dakota,Republican State,White,235,4,239,98.33
+Tennessee,Republican State,American Indian or Alaska Native,166173,6152,172325,96.43
+Tennessee,Republican State,Asian,11936,452,12388,96.35
+Tennessee,Republican State,Black,7420,248,7668,96.77
+Tennessee,Republican State,Native Hawaiian,178,7,185,96.22
+Tennessee,Republican State,White,938,36,974,96.3
+Texas,Republican State,American Indian or Alaska Native,565455,20132,585587,96.56
+Texas,Republican State,Asian,49880,2329,52209,95.54
+Texas,Republican State,Black,99361,3589,102950,96.51
+Texas,Republican State,Native Hawaiian,1003,47,1050,95.52
+Texas,Republican State,White,7326,267,7593,96.48
+Utah,Republican State,American Indian or Alaska Native,125148,3619,128767,97.19
+Utah,Republican State,Asian,1186,27,1213,97.77
+Utah,Republican State,Black,5552,163,5715,97.15
+Utah,Republican State,Native Hawaiian,835,19,854,97.78
+Utah,Republican State,White,795,22,817,97.31
+Vermont,Democratic State,American Indian or Alaska Native,12476,376,12852,97.07
+Vermont,Democratic State,Asian,138,3,141,97.87
+Vermont,Democratic State,Black,340,7,347,97.98
+Virginia,Democratic State,American Indian or Alaska Native,168524,3541,172065,97.94
+Virginia,Democratic State,Asian,20658,550,21208,97.41
+Virginia,Democratic State,Black,30815,781,31596,97.53
+Virginia,Democratic State,Native Hawaiian,381,10,391,97.44
+Virginia,Democratic State,White,1185,29,1214,97.61
+Washington,Democratic State,American Indian or Alaska Native,194101,4667,198768,97.65
+Washington,Democratic State,Asian,8052,209,8261,97.47
+Washington,Democratic State,Black,42898,1170,44068,97.35
+Washington,Democratic State,Native Hawaiian,942,25,967,97.41
+Washington,Democratic State,White,2698,72,2770,97.4
+West Virginia,Republican State,American Indian or Alaska Native,23188,919,24107,96.19
+West Virginia,Republican State,Asian,569,23,592,96.11
+West Virginia,Republican State,Black,493,19,512,96.29
+West Virginia,Republican State,White,107,9,116,92.24
+Wisconsin,Republican State,American Indian or Alaska Native,160235,4755,164990,97.12
+Wisconsin,Republican State,Asian,4853,176,5029,96.5
+Wisconsin,Republican State,Black,6305,199,6504,96.94
+Wisconsin,Republican State,Native Hawaiian,115,5,120,95.83
+Wisconsin,Republican State,White,1014,35,1049,96.66
+Wyoming,Republican State,American Indian or Alaska Native,11872,202,12074,98.33
+Wyoming,Republican State,Black,145,7,152,95.39

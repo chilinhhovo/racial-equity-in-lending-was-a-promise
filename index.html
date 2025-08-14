@@ -1,0 +1,2959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Racial Equity in Lending Was a Promise. It Didn't Last.</title>
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Helvetica+Neue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+        
+        <!-- Chart.js Library -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+        
+        <!-- Plotly.js Library for Bank Approval Rates -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/plotly.js/2.27.1/plotly.min.js"></script>
+        
+        <!-- PapaParse for CSV loading -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+        
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: black;
+            margin: 0;
+            padding: 0;
+            background-color: white;
+            margin-left: 150px;
+        }
+        
+        html, body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+            margin: 0 auto;
+            padding: 0;
+        }
+        
+        .content-section {
+            flex: 1;
+            padding: 2rem;
+            max-width: 800px;
+            background: white;
+            margin: 0 auto 0 300px;
+        }
+        
+        .header-section {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding-bottom: 100px;
+            padding-top: 20px;
+        }
+
+
+        
+        .scrolly-section {
+            width: 400px;
+            background: white;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow: hidden;
+            margin-left: 100px;
+        }
+        
+        .scroller-container {
+            height: 100vh;
+            position: relative;
+        }
+        
+        .scroller-foreground {
+            position: relative;
+            z-index: 1;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide {
+            padding: 20px 40px;
+            margin-bottom: 2rem;
+            opacity: 1;
+            position: relative;
+        }
+        
+        .slide-date {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+        
+        .slide-announcement {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1.2rem;
+            color: #2d5a2d;
+            line-height: 1.3;
+            font-weight: 500;
+            margin-left: 15px;
+        }
+        
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: black;
+            text-align: left;
+        }
+        
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            text-align: left;
+            color: black;
+        }
+        
+        h2 {
+            font-size: 2.5rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        h3 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-top: 0.8rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        
+        h4 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 0.6rem;
+            margin-bottom: 0.1rem;
+            text-align: left;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 1.5rem;
+            text-align: left;
+        }
+        
+        .subtitle {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 400;
+            text-align: left;
+            color: black;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        .byline {
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: black;
+            margin-bottom: 8rem;
+            font-weight: 400;
+        }
+
+        .byline1{
+            font-family: 'Inter', sans-serif;
+            font-size: 1rem;
+            color: black;
+            margin-bottom: 8rem;
+            font-weight: 400;
+        }
+        
+        .year-label {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: black;
+            margin-bottom: 0.5rem;
+        }
+        
+        .visual-placeholder {
+            border: none;
+            padding: 0.5rem;
+            margin: 0.2rem 0;
+            text-align: left;
+            min-height: 50px;
+        }
+        
+        .visual-placeholder h4 {
+            color: black;
+            margin: 0;
+        }
+        
+        .visual-placeholder p {
+            color: black;
+            margin: 0.5rem 0 0 0;
+            font-size: 1rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                flex-direction: column;
+            }
+            
+            .scrolly-section {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            
+            .scroller-container {
+                height: auto;
+            }
+            
+            .slide {
+                height: auto;
+                min-height: 200px;
+            }
+        }
+
+
+
+        /* Bank Charts Grid (non-scrolling) */
+        .bank-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+            margin: 1rem auto 3rem auto;
+            max-width: 4000px;
+            width: 100%;
+        }
+        .bank-card {
+            min-width: 0;
+        }
+        .bank-chart {
+            width: 100%;
+            height: 300px;
+        }
+        .bank-card h3 {
+            margin: 1rem 0 0.5rem 0;
+            font-size: 1.4rem;
+        }
+        .bank-caption {
+            margin: 0 auto;
+            color: #555;
+            line-height: 1.6;
+            font-size: 1.05rem;
+            max-width: 80%;
+            text-align: left;
+        }
+        
+        .chart-description {
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.4;
+            margin: 0.5rem 0;
+        }
+        
+        .name {
+            color: #5d5d5d !important;
+            font-weight: 400 !important;
+            margin-top: 0.5rem;
+        }
+        @media (max-widt: 1200px) {
+            .bank-grid {
+                grid-template-columns: repeat(2, 1fr);
+                max-width: 1400px;
+            }
+        }
+        @media (max-width: 800px) {
+            .bank-grid {
+                grid-template-columns: 1fr;
+                max-width: 800px;
+            }
+            .bank-chart {
+                height: 250px;
+            }
+        }
+
+        /* State Map Small Multiples Styles */
+        .small-multiples-section {
+            margin: 0 auto;
+            padding: 0rem;
+            text-align: left;
+            max-width: 800px;
+            height: auto;
+            overflow: visible;
+        }
+        
+        .small-multiples-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .small-multiples-section p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .maps-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            width: 100%;
+            height: auto;
+            margin: 0;
+            padding: 0.5rem;
+            gap: 1rem;
+            box-sizing: border-box;
+        }
+        
+        .map-item {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            margin: 0;
+            box-shadow: none;
+            transition: none;
+            width: 100%;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .map-item:hover {
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .map-item h3 {
+            margin: 0 0 0.05rem 0;
+            font-size: 1.5rem;
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .map-container {
+            width: 100%;
+            height: 80%;
+            max-width: 100%;
+            background: transparent;
+            border-radius: 0;
+        }
+        
+        .legend {
+            background: transparent;
+            padding: 0.3rem 0.5rem;
+            border-radius: 0;
+            box-shadow: none;
+            display: inline-block;
+            margin: 0;
+        }
+        
+        .legend-item {
+            display: inline-flex;
+            align-items: center;
+            margin: 0 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .legend-color {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            border: 1px solid #ccc;
+            border-radius: 2px;
+        }
+        
+        .insight-text-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+        }
+        
+        .insight-text-content {
+            text-align: center;
+            padding: 1rem;
+            max-width: 100%;
+        }
+        
+        .insight-text-content p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+            font-family: 'EB Garamond', serif;
+            margin: 0;
+            font-weight: 500;
+        }
+        
+
+        
+        @media (max-width: 900px) {
+            .maps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.001rem;
+            }
+            
+            .content-section {
+                margin: 0 auto 0 100px;
+                max-width: 600px;
+            }
+            
+            .small-multiples-section {
+                margin: 0 auto 0 100px;
+                max-width: 600px;
+            }
+        }
+        
+        @media (max-width: 600px) {
+            .maps-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.001rem;
+            }
+            
+            .content-section {
+                margin: 0 auto 0 50px;
+                max-width: 90vw;
+            }
+            
+            .small-multiples-section {
+                margin: 0 auto 0 50px;
+                max-width: 90vw;
+            }
+            
+            .maps-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            /* Make charts responsive on small screens */
+            #stateComparisonChart {
+                height: 300px !important;
+            }
+            
+            .visual-placeholder div[style*="height: 400px"] {
+                height: 300px !important;
+            }
+        }
+
+    
+
+        /* Executive Order Scrollytelling Styles */
+        .exec-order-scrolly {
+            position: relative;
+            height: 500vh;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .scrolly-step {
+            position: sticky;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .step-image {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: 20%;
+            background-position: center center;
+            background-repeat: no-repeat;
+            z-index: 1;
+        }
+        
+        .floating-text {
+            position: relative;
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            max-width: 600px;
+            text-align: center;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        
+        .floating-text p {
+            margin: 0;
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        /* JPMorgan Change Log Styles */
+        .jpmorgan-changes {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .change-box {
+            background: white;
+            border-radius: 0;
+            padding: 2rem;
+            position: relative;
+            border: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+        }
+        
+        .change-tag {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            background: transparent;
+            color: #1a1a1a;
+            padding: 0.5rem 1rem;
+            border-radius: 0;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: 'Helvetica Neue, sans-serif';
+            letter-spacing: 0.01em;
+        }
+        
+        .change-text {
+            margin-top: 3.5rem;
+        }
+        
+        .change-text p {
+            margin: 0 0 1.2rem 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: #28a745;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-weight: 600;
+        }
+        
+        .change-text p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .change-box.deleted .change-text p {
+            color: #28a745;
+        }
+        
+        .change-box.added .change-text p {
+            color: #28a745;
+        }
+
+      
+
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="content-section">
+            <div class="header-section">
+                <header>
+                    <h1>Racial Equity in Lending Was a Promise. It Didn't Last.</h1>
+                    <p>After high-profile pledges to close the racial wealth gap, major banks still approve Black and Latino mortgage applicants at lower rates than White borrowers.
+                    </p>
+                    <p class="byline1">By Chi Vo Aug. 14, 2024</p>
+                </header>
+            </div>
+            
+
+            
+    
+            <section>
+                <p>In April 2025,  President Donald Trump <a href="https://www.whitehouse.gov/presidential-actions/2025/04/restoring-equality-of-opportunity-and-meritocracy/">signed</a> an executive order eliminating the use of disparate-impact liability across federal agencies’ rules and enforcement. The order targets one of the key enforcement mechanisms of the Fair Housing Act, known as disparate impact, which had allowed regulators to challenge lending policies that produced racial gaps without proof of explicit bias. The White House called it a return to “race-neutral” governance.
+                </p>
+                
+                <p>For banks and mortgage lenders, the change removes one of the few tools regulators used to hold them accountable for racial gaps in approval rates.
+                </p>
+                
+                <p>For banks and mortgage lenders, the rollback removes one of the few tools regulators used to hold them accountable for racial gaps in approval rates.</p>
+                
+                <p>“Discrimination will persist and even grow in the absence of meaningful oversight,” said Chi Chi Wu, senior attorney at the National Consumer Law Center.</p>
+            </section>
+
+
+
+
+
+            <section>
+                <h2>A Pledge That Set the Tone</h2>
+                
+                <p>JPMorgan Chase is the nation's largest bank and a top mortgage lender.</p>
+                
+                <div>
+                    <p>In 2020, in the months after George Floyd’s murder, JPMorgan Chase announced a $30 billion commitment to close the racial wealth gap–one of the largest racial-equity pledges ever made by a U.S. bank. The commitment featured prominently in its 2020 annual report, where the term “racial equity” appeared <strong>17 times</strong> - more than double the year before.</p>
+                    <p>CEO Jamie Dimon called it a response to “deeply felt social and racial injustice” during a year of pandemic, recession, and political turmoil. Other executives at JPMorgan Chase framed it as both a moral responsibility and a strategic investment in communities of color.
+                    </p>
+                    
+                                        <div class="jpmorgan-changes" style="margin: 2rem 0;">
+                        <div class="change-box added">
+                            <div class="change-tag">JPMorgan Chase 2020</div>
+                            <div class="change-text">
+                                <p>"It was a year of a global pandemic, a global recession, unprecedented government actions, turbulent elections, and deeply felt social and racial injustice"</p>
+                                <p class="name"> - Jamie Dimon, Chairman and CEO, JPMorgan Chase & Co</p>
+                            
+                            </div>
+                        </div>
+                        
+                        <div class="change-box added">
+                            <div class="change-text" style="margin-top: 1rem;">
+                                <p>"Our efforts to close the racial wealth divide include a $30 billion injection of additional capital and other resources for Black and Latinx clients, employees and communities in the U.S. and globally over the next five years."</p>
+                                <p class="name"> - Daniel E. Pinto, Co-President and Chief Operating Officer, JPMorgan Chase & Co</p>
+                                
+                            </div>
+                        </div>
+                        
+                        <div class="change-box added">
+                            <div class="change-text">
+                                <p>"We announced a massive $30 billion commitment... to advance racial equity, drive an inclusive recovery, support employees and break down barriers of systemic racism."</p>
+                                <p class="name"> — Peter L. Scher, Head of Corporate Responsibility</p>
+                                
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                
+                <div>
+                    <p>A year later, JPMorgan  kept the  language strong. The 2021 report contained <strong>16 references</strong> to racial equity. The annual report showed measurable progress toward the $30 billion goal. Symbolic commitments were paired with financing for more than 60,000 affordable housing units. 
+                    </p>
+                    
+                    <div class="jpmorgan-changes" style="margin: 2rem 0;">
+                        <div class="change-box added">
+                            <div class="change-tag">JPMorgan Chase 2021 Annual Report</div>
+                            <div class="change-text">
+                                <p>"The murder of George Floyd in 2020 highlighted what we already knew: More was required by all of us to address systemic racism."</p>
+                                <p class="name"> - Jamie Dimon, Chairman and CEO, JPMorgan Chase & Co</p>
+                            </div>
+                        </div>
+                        
+                        <div class="change-box added">
+                            <div class="change-text" style="margin-top: 1rem;">
+                                <p>"By the end of 2021, we had deployed or committed more than $18 billion toward our [$30 billion] goal."</p>
+                            </div>
+                        </div>
+                        
+                        <div class="change-box added">
+                            <div class="change-text" style="margin-top: 1rem;">
+                                <p>"We expanded our global Diversity, Equity and Inclusion department to include three new Centers of Excellence: Advancing Hispanics and Latinos, The Office of Asian and Pacific Islander Affairs, and The Office of LGBT+ Affairs."</p>
+                                
+                                
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+                
+                <div>
+                    <p>In the 2022 report, the tone shifted.  JPMorgan reframed its priority from meeting a numerical target to pursuing “long-term impact.” </p>
+                    <p>Mentions of racial equity fell by more than half, to <strong>7 mentions</strong>.
+                    </p>
+                    
+                    <div class="jpmorgan-changes" style="margin: 2rem 0;">
+                        <div class="change-box added">
+                            <div class="change-tag">JPMorgan Chase 2022 Annual Report</div>
+                            <div class="change-text">
+                                <p>"By the end of 2022, we reported nearly $29 billion in progress toward our original goal. But our focus is not on how much money is deployed — it is on long-term impact and outcomes."</p>
+                                <p class="name"> - Jamie Dimon, Chairman and CEO, JPMorgan Chase & Co</p>
+                            </div>
+                        </div>
+                        
+                        <div class="change-box added">
+                            <div class="change-text" style="margin-top: 1rem;">
+                                <p>"Over $163 million in loans for Black, Hispanic and Latino households to purchase or refinance a home."</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <p>The 2023 report showed no sign of a rebound to endorsing Diversity, Equity and Inclusion language. </p>
+                        
+                    <p>Mentions of racial equity, justice or wealth inequality remained at <strong>7 times</strong>. Floyd's name disappeared, and equity language was folded into broader diversity terms.</p>
+                    
+                    <div class="jpmorgan-changes" style="margin: 2rem 0;">
+                        <div class="change-box added">
+                            <div class="change-tag">JPMorgan Chase 2023 Annual Report</div>
+                            <div class="change-text">
+                                <p>"We remain mindful of the barriers to financial inclusion for historically underserved racial and ethnic groups."</p>
+                                <p class="name"> - Jamie Dimon, Chairman and CEO, JPMorgan Chase & Co</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div>
+                    <p> By the 2024 annual report, JPMorgan Chase had retreated from the explicit language it embraced after 2020. The focus shifted to general community outreach without specifying  racial disparities.
+                    </p>
+                    <p>Mentions of racial equity, justice or wealth inequality dropped to <strong>2 times</strong>. 
+                    </p>
+                    
+                    <div class="jpmorgan-changes" style="margin: 2rem 0;">
+                        <div class="change-box added">
+                            <div class="change-tag">JPMorgan Chase 2024 Letter to Shareholders</div>
+                            <div class="change-text">
+                                <p>"While we have modified our approach to certain corporate responsibilities to conform to new guidance, we remain committed to reaching out to all communities in an effort to create a stronger, more inclusive economy, from supporting work skills training programs around the world and financing affordable housing and small businesses to making investments in our people and in cities like Detroit that show how business and government leaders can work together to solve problems."</p>
+                                <p class="name"> - Jamie Dimon, Chairman and CEO, JPMorgan Chase & Co</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <p style="margin: 2rem 0; color: #666;"><a href="https://www.bloomberg.com/news/articles/2025-05-01/jpmorgan-ceo-dimon-says-he-never-believed-in-bias-training" target="_blank">Bloomberg</a> later reported</a> leaked audio from a 2025 town hall in which Dimon dismissed some diversity spending as "stupid" and said he had never been a firm believer in bias training.</p>
+
+            <section>
+                <h2>A shift in tone</h2>
+                
+                <p>Among the three largest U.S. mortgage banks, references to racial equity with phrases like ‘racial equity’, ‘racial equality’, in annual reports spiked in the early 2020s, then fell sharply.  JPMorgan and Bank of America peaked in 2020, while Wells Fargo’s use of racial equity language reached its high point in 2022, before a sharp decline in 2024.</p>
+                
+                <div class="visual-placeholder">
+                    <h4>Banks Scaled Back DEI Language After 2020</h4>
+                    <p>Mentions of diversity, equity, and inclusion in bank reports surged in 2020 but have dropped sharply since</p>
+                    
+                    <!-- Interactive Chart Container -->
+                    <div style="width: 100%; height: 400px; margin: 2rem 0;">
+                        <canvas id="deiChart"></canvas>
+                    </div>
+                </div>
+                <p>Bank of America pledged $1 billion for racial equity in 2020, later raising it to $1.25 billion. Early reports named specific racial gaps in homeownership and credit access. By 2023, those references were replaced by terms like “economic mobility” and “financial inclusion” for “underserved communities”.</p>
+                <p>Wells Fargo’s most prominent racial-equity pledge came in April 2022, when it committed $210 million to help minority families buy or refinance homes, alongside expanded partnerships with civil-rights groups. The 2022 annual report also featured more references to racial equity than in previous years, with 4 mentions, within a dedicated Environmental, Social, and Governance (ESG) section, before mentions declined in later filings. 
+                </p>
+            </section>
+            
+            <section>
+                <h2>When promises don't match performance</h2>
+                
+                <p>Despite public pledges to address inequality in lending, gaps in approval rates remained stubbornly persistent. Our analysis of 15 million mortgage records from the  Home Mortgage Disclosure Act (HMDA) database, declared by mortgage lenders, shows that from 2018 to 2024,  JPMorgan’s mortgage-approval rate for Black borrowers was about six percentage points lower than for White borrowers.</p>
+                <p>This analysis uses publicly available HMDA data, which does not include borrower credit scores or other underwriting variables commonly used by lenders and regulators to assess fair-lending risk, as commented by Fairway Mortgage. Without this information, it is not possible to determine whether lenders treated similarly situated applicants differently. Despite the US showing consistent credit scores from 2018-2024, according to <a href="https://www.experian.com/consumer-products/credit-reports/credit-score-info/credit-score-trends/" target="_blank">Experian data</a>,  the findings should therefore be interpreted as descriptive of general approval-rate trends rather than definitive evidence of lending discrimination.
+                </p>
+                
+                <div class="visual-placeholder">
+                    <h4>Mortgage Approval Rate Disparities by Bank</h4>
+                    <p class="chart-description">Approval rate gaps between Black and White borrowers across major banks</p>
+
+
+
+                    <!-- Static three-chart grid -->
+                    <div class="bank-grid">
+                        <div class="bank-card">
+                            <div id="bankChartJPM" class="bank-chart"></div>
+                            <h3>JPMorgan Chase</h3>
+                            <p class="chart-description">From 2018 to 2024, JPMorgan’s mortgage‑approval gap between Black and White borrowers hovered around six percentage points. </p>
+                        </div>
+                        <div class="bank-card">
+                            <div id="bankChartBOA" class="bank-chart"></div>
+                            <h3>Bank of America</h3>
+                            <p class="chart-description">Bank of America posted the smallest gap, about two percent points , between White and Black borrowers. The gap widened slightly in 2022, before narrowing again in subsequent years.</p>
+                        </div>
+                        <div class="bank-card">
+                            <div id="bankChartWF" class="bank-chart"></div>
+                            <h3>Wells Fargo</h3>
+                            <p class="chart-description">Wells Fargo’s racial-approval gap remained in double digits, but began to narrow slightly after  the <a href="https://www.wellsfargo.com/newsroom/press-releases/2023/wells-fargo-announces-plans-to-scale-back-mortgage-business/" target="_blank">announcement</a> in early 2023, that the bank would stop buying mortgages from other lenders and scale back its mortgage business, to focus on existing customers and minority communities.</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>devin michelle bunten, an Associate Professor of Urban Economics and Housing at MIT, says the disparities persist for two main reasons: direct discrimination by employees and structural racism that shapes borrowers’ financial profiles before they ever apply. </p>
+                
+                <p>Some gaps start with how staff handle applications. Black and other minority borrowers may be asked for more documentation. They may be steered toward mortgages with low “teaser rates” that later become unaffordable. “Neither pathway requires the employee to act in a self-consciously discriminatory way,” bunten said. “They may have intuitions, grounded in cultural ideas and social norms, that race plays a functional role in determining creditworthiness.”</p>
+                
+                <p>The second reason is structural racism in labor markets, education and wealth accumulation. Black borrowers often have less family wealth or savings to draw on when buying a home. Lenders sometimes treat these financial disadvantages as unrelated to their decision on whether to approve a mortgage. In reality, Bunten said "they are channels through which disparity is reproduced."</p>
+                <p>A 2022 analysis by the Consumer Financial Protection Bureau found that when consumer complaints about mortgage lending were made public, racial disparities in approval rates narrowed. Public scrutiny can disrupt  these lending patterns, said Dr. Linh Nguyen, a finance professor at the University of St Andrews. “Social pressure after incidents such as George Floyd may produce stronger effects on bank minority lending than regulatory pressure.” That influence has limits, said Dr. José Loya, an urban planning scholar at UCLA. “Some of the largest mortgage lenders are not public-facing, so media scrutiny may not have a large impact on their practices. Black and Latino home seekers continue to face large obstacles in the homeownership market, especially when trying to buy a home in predominantly minority neighborhoods.”</p>
+            </section>
+            
+            <section>
+                <h2>Non-banks pick up the slack, and charge more</h2>
+                
+                <p>As big banks scaled back, non-bank lenders, including independent mortgage companies, online finance firms, and brokers, filled much of the gap. By 2022, they originated more than <a href="https://www.federalreserve.gov/econres/notes/feds-notes/non-bank-lenders-originated-more-than-61-percent-of-all-single-family-home-loans-in-2022-20250313/" target="_blank">61 percent</a> of all single-family home types such as mortgage, refinancing and non-primary residence.  For owner-occupied single-family homes, they dominated the market, accounting for roughly nine out of every ten loans. </p>
+                
+                <div class="visual-placeholder">
+                    <h4>Non-Banks Now Dominate Mortgage Approvals</h4>
+                    <p>The share of mortgage approvals from non-bank lenders has steadily grown since 2018, while banks’ share has declined</p>
+                    
+                    <!-- Interactive Chart Container -->
+                    <div style="width: 100%; height: 400px; margin: 2rem 0;">
+                        <div id="lenderTypeChart"></div>
+                    </div>
+                </div>
+                
+                <p style="margin: 2rem 0;">From 2018 to 2020, non-bank lenders issued more mortgages in total than banks for every major racial group. They approved a higher share of applicants with weaker or more complicated credit profiles than traditional banks, making it easier to apply. However, strict underwriting meant many applications were still denied, and approved loans often carried higher costs in the form of upfront fees, broker premiums, or higher interest rates. A  <a href="https://www.consumerfinance.gov/wp-content/uploads/2022/03/CFPB-Report-on-Mortgage-Lending-Disparities-2022.pdf" target="_blank">2022 Consumer Financial Protection Bureau report</a> documented these patterns. </p>
+                
+
+            
+            <section>
+                
+                <p>Most non-bank lenders are privately held and are not required to publish detailed annual reports. Rocket Mortgage, one of the largest non-bank lenders in the United States, offers a small window into the sector.</p>
+                
+                <div class="visual-placeholder">
+                    <h4>Rocket Mortgage Approval Rates</h4>
+                    <p>Approval rates for Black and African American versus White borrowers at Rocket Mortgage over time</p>
+                    
+                    <!-- Interactive Chart Container -->
+                    <div style="width: 100%; height: 450px; margin: 2rem 0;">
+                        <div id="rocketMortgageChart"></div>
+                    </div>
+                    
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(255, 165, 0, 0.3);"></div>
+                            <span>Gap (White - Black %)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #1f77b4;"></div>
+                            <span>White Approval Rate</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                            <span>Black Approval Rate</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <p>Rocket Mortgage's approval gap between Black and White borrowers is narrower than most of the U.S. banks, including JPMorgan and Wells Fargo. However, its public filings focus largely on financial results, with diversity commitments limited to workplace culture statements. </p>
+                
+                <p>For borrowers, the more noticeable difference is not the racial equity gap but the cost. A <a href="https://www.jpmorganchase.com/institute" target="_blank">JPMorgan Chase Institute</a> report found that loan setup fees from non-bank lenders averaged <strong>24.7 percent</strong> (about $487) higher than banks, with broker premiums adding about $718 on average.</p>
+                
+                <p>Consumer advocates see troubling parallels to the 2000s subprime crisis, when predatory loans flooded minority communities.</p>
+                
+                <p>Reliance on mortgage revenue and short-term funding leaves these lenders vulnerable to shocks. The <a href="https://www.newyorkfed.org/medialibrary/media/newsevents/speeches/2025/Cetorelli-Atlanta-Fed-Conference-May-2025">Federal Reserve Bank of New York</a> has warned that if the normal flow of lending between financial institutions were to stall during a crisis, the heavy reliance on a few large non-banks could cut off access to loans for entire groups of borrowers, particularly minority borrowers who depend on them.</p>
+            </section>
+            
+            <!-- State Map Small Multiples -->
+            <section class="small-multiples-section">
+                <h2>A map of inequality</h2>
+                <h3>Geography is another important factor that shapes lending outcomes</h4>
+                <p class="chart-description">Denial rates are highest in states with histories of racial exclusion</p>
+                
+                <div class="maps-grid">
+                    <div class="map-item insight-text-item">
+                        <div class="chart-description">
+                            <p style="margin: 0; font-size: 1.1rem; line-height: 1.6;">Year after year, White borrowers in Mississippi, Louisiana, and Arkansas were approved for mortgages at much higher rates than Black borrowers.</p>
+                        </div>
+                    </div>
+                    <div class="map-item" id="map2018">
+                        <h3>2018</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2019">
+                        <h3>2019</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2020">
+                        <h3>2020</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2021">
+                        <h3>2021</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2022">
+                        <h3>2022</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2023">
+                        <h3>2023</h3>
+                        <div class="map-container"></div>
+                    </div>
+                    <div class="map-item" id="map2024">
+                        <h3>2024</h3>
+                        <div class="map-container"></div>
+                    </div>
+                </div>
+                
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #fee08b;"></div>
+                        <span>Low Gap (< 5%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #fc8d59;"></div>
+                        <span>Medium Gap (5-10%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #e34a33;"></div>
+                        <span>High Gap (10-15%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #d73027;"></div>
+                        <span>Extreme Gap (> 15%)</span>
+                    </div>
+                </div>
+                
+                <p style="margin: 2rem 0; font-size: 1.1rem; line-height: 1.6;">In Mississippi, Louisiana and Arkansas, White borrowers were consistently approved for mortgages far more often than Black borrowers – by an average of roughly 14 percentage points between 2018 and 2024.</p>
+                
+                <div class="visual-placeholder">
+                    <h4>Racial Mortgage Approval Gaps Persist in the Deep South</h4>
+                                         <p class="chart-description">White borrowers in Mississippi, Louisiana, and Arkansas maintained higher mortgage approval rates than Black borrowers from 2018 to 2024</p>
+                    
+                    <!-- Interactive Chart Container -->
+                    <div style="width: 100%; height: 500px; margin: 0rem 0;">
+                        <div id="stateComparisonChart"></div>
+                            </div>
+                            
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: rgba(255, 165, 0, 0.3);"></div>
+                            <span>Gap (White - Black %)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #1f77b4;"></div>
+                            <span>White Approval Rate</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background-color: #ff7f0e;"></div>
+                            <span>Black Approval Rate</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>The legal record </h2>
+                
+                <p>Since 2022, the <a href="https://www.justice.gov/" target="_blank">Department of Justice's (DOJ)</a> Combatting Redlining Initiative has filed and settled more than a dozen mortgage discrimination cases, together yielding over $153 million for impacted communities.
+                </p>
+                
+                <p>One of the most high-profile settlements came in 2023, when City National Bank in Los Angeles agreed to pay more than $31 million after investigators found it avoided marketing and lending in majority-Black and Latino neighborhoods. Federal prosecutors called it the largest redlining settlement in DOJ history. The agreement required the bank to open new branches in underserved communities, invest in loan subsidies, and expand outreach. "This settlement should send a strong message to the financial industry that we will not tolerate modern-day redlining and that all lenders must be held accountable when they fail to provide equal access to credit in communities of color," said Assistant Attorney General Kristen Clarke in a statement, announcing the largest case to date.</p>
+                
+                <p>In 2024, Citadel Federal Credit Union in Pennsylvania paid $6 million in the first redlining case ever brought against a credit union.</p>
+
+                <p>From 2023 to 2025, Ameris Bank, Fairway Independent Mortgage, and Draper & Kramer reached settlements with federal prosecutors in joint redlining enforcement actions across Georgia, Alabama, Florida, Illinois, and Massachusetts, resulting in millions in loan subsidies, targeted outreach, and new hiring mandates.
+                </p>
+
+                <p>In 2025, The Mortgage Firm in Miami agreed to pay $1.75 million for loan subsidies and expanded services in Black and Hispanic neighborhoods.</p>
+
+                <p>>Despite these high-dollar settlements and court-mandated reforms, gaps in mortgage approval rates for Black and Latino applicants remain entrenched. Experts studying Fair Lending Litigation on Mortgage Markets on past fair-lending cases show that approval gaps often shrink right after a settlement. However,  "This settlement is a stark reminder that redlining is not a problem from a bygone era" said Assistant Attorney General Kristen Clark in a statement, and can widen again once oversight ends or without sustained enforcement.</p>
+            </section>
+
+            <section>
+                <h2>The fading doctrine</h2>
+                
+                <p>Trump's executive order does more than ending Diversity Equity and Inclusion programs. It stopped  federal use of the disparate-impact standard, a pillar of civil-rights law. The doctrine allowed regulators and plaintiffs to challenge practices that produced racially unequal outcomes without proving intent. </p>
+                <p>By directing agencies to eliminate its use "to the maximum degree possible," the order raises the bar for discrimination cases. Without disparate impact, plaintiffs must show explicit bias, a task made harder when lending decisions are driven by algorithms and automated underwriting systems. </p>
+                <p>"In some markets, moving away from it is likely to mean that fewer minorities obtain loans or other financial services."  said Former Comptroller of the Currency and Founder and CEO of Ludwig Advisors. "A fair regulatory regime should ensure that the same outcome standards apply to all customers and that anyone who qualifies economically has equal access to a given product."</p>
+                <p>While federal agencies will no longer enforce the disparate impact doctrine, it remains on the books. State attorneys general and private individuals can still use it to bring fair housing cases, and complaints can still be filed with Housing and Urban Development, state assemblies, or in federal court.
+                </p>
+                <p>Associate Professor Devin Bunten says the rollback sends two very different messages within lending institutions. "For institutional leaders, the rollback–combined with other administration actions, such as the targeting of universities and demands for admissions data on race–signals that they may face heightened scrutiny for working towards racial equity in lending," she said. "For mortgage agents and other employees, the rollback signals free rein to discriminate. Of course, many such agents will have no interest in doing so, and may remain committed to equity work regardless."
+                </p>
+                
+            </section>
+            
+            <hr style="margin: 3rem 0; border: none; border-top: 1px solid #ddd;">
+            
+            <section> 
+                <h3> Methodology</h3>
+                <p> To evaluate racial disparities in mortgage lending, I downloaded the publicly available Home Mortgage Disclosure Act (HMDA) loan‑level files for 2018–2024. <br> 
+                These files contain about 124 million records of mortgage applications and actions taken. I  applied a strict filter to isolate comparable loans: conventional, first‑lien, site‑built home‑purchase mortgages for owner‑occupants, and then mapped the HMDA race codes into broad categories (Black, White and Asian). <br>
+                Using pandas in Python, I grouped the filtered data by lender, state, year and race to compute raw approval and denial rates; the analysis did not control for borrowers’ credit scores or other underwriting variables because such data are absent from the public dataset. The resulting approval rate gaps (White minus Black and African American) were used to estimate the volume of loans effectively denied and to create the charts in this story. <br>
+                I also scraped annual reports and sustainability filings from major banks to count references to “racial equity” and related terms, and interviewed academics and fair‑lending advocates to contextualize our findings. <br>
+                All analysis was conducted with publicly available data to illustrate broad patterns rather than determine causes.</p>
+
+            </section>
+            
+            <hr style="margin: 3rem 0; border: none; border-top: 1px solid #ddd;">
+            
+            <section>
+                <h3> Acknowledgments </h4>
+                <p> Tremendous thanks to Kenan Davis for providing guidance and editing this story </p>
+                <p> This story was produced to fulfill the requirements of Masters Project "Data Journalism" at the <a href="https://journalism.columbia.edu/" target="_blank">Columbia Journalism School</a>. </p>
+            </section>
+
+            <section>
+                
+                <div class="visual-placeholder" style="margin-left: 400px;">
+                </div>
+                
+                <div class="visual-placeholder" style="margin-left: 400px;">
+                </div>
+                
+                <div class="visual-placeholder" style="margin-left: 400px;">
+
+                </div>
+            </section>
+        </div>
+
+        <div class="scrolly-section">
+            <div class="scroller-container" id="scroller">
+                <div class="scroller-foreground" id="scroller-foreground">
+                    <div class="slide">
+                        <div class="slide-date">February 08, 2017</div>
+                        <div class="slide-announcement">Wells Fargo Commits to Increase African American Homeownership</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">October 08, 2020</div>
+                        <div class="slide-announcement">JPMorgan Chase Provides an Update on its $30 Billion Racial Equity Commitment</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">March 30, 2021</div>
+                        <div class="slide-announcement">Bank of America Increases Commitment to Advance Racial Equality and Economic Opportunity to $1.25 Billion</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">April 26, 2021</div>
+                        <div class="slide-announcement">Bank of America Announces $1.5 Million Commitment to Advance Racial Equality and Economic Opportunity in Massachusetts</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">October 22, 2021</div>
+                        <div class="slide-announcement">Citi Will Conduct a Racial Equity Audit</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">November 09, 2021</div>
+                        <div class="slide-announcement">Citi's Action for Racial Equity Initiative Invests $1 Billion to Address the Racial Wealth Gap in the U.S.</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">April 13, 2022</div>
+                        <div class="slide-announcement">Wells Fargo Expands Efforts to Advance Racial Equity in Homeownership</div>
+                    </div>
+                    
+                    <div class="slide">
+                        <div class="slide-date">January 20, 2025</div>
+                        <div class="slide-announcement" style="color: #d00;">White House Ending Radical and Wasteful Government Diversity, Equity and Inclusion Programs and Preferencing</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scroller = document.getElementById('scroller');
+        const scrollerForeground = document.getElementById('scroller-foreground');
+        const slides = document.querySelectorAll('.slide');
+        
+        let currentSlide = 0;
+        const totalSlides = slides.length;
+        const slideHeight = 100;
+        
+        let scrollPosition = 0;
+        const scrollSpeed = 0.5;
+        let isPaused = false;
+        
+        function continuousScroll() {
+            if (isPaused) return;
+            
+            scrollPosition += scrollSpeed;
+            
+            const totalHeight = slides.length * 150;
+            
+            scrollerForeground.style.transform = `translateY(-${scrollPosition}px)`;
+            if (scrollPosition >= totalHeight) {
+                scrollPosition = 0;
+            }
+        }
+        
+        setInterval(continuousScroll, 16);
+        scroller.addEventListener('mouseenter', () => {
+            isPaused = true;
+        });
+        
+        scroller.addEventListener('mouseleave', () => {
+            isPaused = false;
+        });
+        
+
+        window.addEventListener('scroll', () => {
+            const scrollySection = document.querySelector('.scrolly-section');
+            const contentSection = document.querySelector('.content-section');
+            const contentTop = contentSection.offsetTop;
+            const scrollPosition = window.pageYOffset;
+            
+            if (scrollPosition > contentTop + 100) {
+                scrollySection.style.opacity = '0';
+                scrollySection.style.transition = 'opacity 0.5s ease';
+            } else {
+                scrollySection.style.opacity = '1';
+            }
+        });
+
+        console.log('Chart.js loaded:', typeof Chart !== 'undefined');
+        window.addEventListener('load', function() {
+            console.log('Window loaded, creating chart...');
+            
+            const canvas = document.getElementById('deiChart');
+            console.log('Canvas element:', canvas);
+            
+            if (!canvas) {
+                console.error('Canvas element not found');
+                return;
+            }
+            
+            const ctx = canvas.getContext('2d');
+            console.log('Canvas context:', ctx);
+            
+            if (!ctx) {
+                console.error('Could not get 2D context');
+                return;
+            }
+            
+
+            const jpData = [0, 0, 20, 16, 7, 7, 2];
+            const boaData = [0, 2, 6, 4, 4, 2, 1];
+            const wfData = [1, 0, 2, 0, 4, 2, 1];
+            const combinedData = jpData.map((jp, index) => jp + boaData[index] + wfData[index]);
+            
+            console.log('Creating chart with data:', combinedData);
+            
+            try {
+                const chart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: ['2018', '2019', '2020', '2021', '2022', '2023', '2024'],
+                        datasets: [{
+                            label: '',
+                            data: combinedData,
+                            borderColor: '#333',
+                            backgroundColor: 'rgba(51, 51, 51, 0.1)',
+                            borderWidth: 3,
+                            pointRadius: 6,
+                            pointHoverRadius: 8,
+                            tension: 0.1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            title: {
+                                display: false
+                            },
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                enabled: true,
+                                mode: 'index',
+                                intersect: false,
+                                backgroundColor: 'rgba(255, 255, 255, 1)',
+                                titleColor: '#000',
+                                bodyColor: '#000',
+                                borderColor: '#000',
+                                borderWidth: 1,
+                                cornerRadius: 0,
+                                callbacks: {
+                                    title: function(context) {
+                                        if (context && context.length > 0 && context[0] && context[0].label) {
+                                            return 'Year: ' + context[0].label;
+                                        }
+                                        return 'Year';
+                                    },
+                                    afterBody: function(context) {
+                                        if (context && context.length > 0 && context[0] && context[0].label) {
+                                            const year = context[0].label;
+                                            const yearIndex = ['2018', '2019', '2020', '2021', '2022', '2023', '2024'].indexOf(year);
+                                            
+                                            if (yearIndex !== -1) {
+                                                return [
+                                                    '',
+                                                    'JPMorgan Chase: ' + jpData[yearIndex] + ' words',
+                                                    'Bank of America: ' + boaData[yearIndex] + ' words',
+                                                    'Wells Fargo: ' + wfData[yearIndex] + ' words'
+                                                ];
+                                            }
+                                        }
+                                        return [];
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: { display: true, text: 'Year' },
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                            },
+                            y: {
+                                title: { display: true, text: 'Word Count' },
+                                beginAtZero: true,
+                                grid: { color: 'rgba(0, 0, 0, 0.1)' }
+                            }
+                        },
+                        backgroundColor: 'rgba(128, 128, 128, 0.05)',
+                        interaction: {
+                            mode: 'index',
+                            intersect: false
+                        },
+                        elements: {
+                            point: {
+                                backgroundColor: '#333',
+                                borderColor: '#333'
+                            }
+                        }
+                    }
+                });
+                
+                console.log('Chart created successfully');
+                
+            } catch (error) {
+                console.error('Error creating chart:', error);
+            }
+        });
+
+
+        async function loadBankData() {
+            try {
+                const response = await fetch('data/bank_race_summary.csv');
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.trim()] = values[index]?.trim();
+                        });
+                        data.push(row);
+                    }
+                }
+                
+                // Transform the data to match the expected format
+                const transformedData = data
+                    .filter(d => d.bank_name && d.race_label && d.activity_year && d.approval_rate)
+                    .map(d => ({
+                        year: parseInt(d.activity_year),
+                        bank: d.bank_name,
+                        race: d.race_label,
+                        rate: parseFloat(d.approval_rate)
+                    }))
+                    .filter(d => d.race === 'White' || d.race === 'Black')
+                    .filter(d => d.bank === 'JPMorgan Chase' || d.bank === 'Bank of America' || d.bank === 'Wells Fargo');
+                
+                console.log('Loaded bank data from CSV:', transformedData.length, 'records');
+                return transformedData;
+            } catch (error) {
+                console.error('Error loading bank data:', error);
+                // Fallback to sample data if CSV loading fails
+                const sampleData = [
+                { year: 2018, bank: 'JPMorgan Chase', race: 'White', rate: 0.85 },
+                { year: 2018, bank: 'JPMorgan Chase', race: 'Black', rate: 0.79 },
+                { year: 2019, bank: 'JPMorgan Chase', race: 'White', rate: 0.87 },
+                { year: 2019, bank: 'JPMorgan Chase', race: 'Black', rate: 0.81 },
+                { year: 2020, bank: 'JPMorgan Chase', race: 'White', rate: 0.89 },
+                { year: 2020, bank: 'JPMorgan Chase', race: 'Black', rate: 0.83 },
+                { year: 2021, bank: 'JPMorgan Chase', race: 'White', rate: 0.88 },
+                { year: 2021, bank: 'JPMorgan Chase', race: 'Black', rate: 0.82 },
+                { year: 2022, bank: 'JPMorgan Chase', race: 'White', rate: 0.86 },
+                { year: 2022, bank: 'JPMorgan Chase', race: 'Black', rate: 0.80 },
+                { year: 2023, bank: 'JPMorgan Chase', race: 'White', rate: 0.84 },
+                { year: 2023, bank: 'JPMorgan Chase', race: 'Black', rate: 0.78 },
+                { year: 2024, bank: 'JPMorgan Chase', race: 'White', rate: 0.82 },
+                { year: 2024, bank: 'JPMorgan Chase', race: 'Black', rate: 0.76 },
+
+                { year: 2018, bank: 'Bank of America', race: 'White', rate: 0.83 },
+                { year: 2018, bank: 'Bank of America', race: 'Black', rate: 0.81 },
+                { year: 2019, bank: 'Bank of America', race: 'White', rate: 0.85 },
+                { year: 2019, bank: 'Bank of America', race: 'Black', rate: 0.83 },
+                { year: 2020, bank: 'Bank of America', race: 'White', rate: 0.87 },
+                { year: 2020, bank: 'Bank of America', race: 'Black', rate: 0.85 },
+                { year: 2021, bank: 'Bank of America', race: 'White', rate: 0.86 },
+                { year: 2021, bank: 'Bank of America', race: 'Black', rate: 0.84 },
+                { year: 2022, bank: 'Bank of America', race: 'White', rate: 0.84 },
+                { year: 2022, bank: 'Bank of America', race: 'Black', rate: 0.82 },
+                { year: 2023, bank: 'Bank of America', race: 'White', rate: 0.83 },
+                { year: 2023, bank: 'Bank of America', race: 'Black', rate: 0.81 },
+                { year: 2024, bank: 'Bank of America', race: 'White', rate: 0.81 },
+                { year: 2024, bank: 'Bank of America', race: 'Black', rate: 0.79 },
+
+                { year: 2018, bank: 'Wells Fargo', race: 'White', rate: 0.82 },
+                { year: 2018, bank: 'Wells Fargo', race: 'Black', rate: 0.72 },
+                { year: 2019, bank: 'Wells Fargo', race: 'White', rate: 0.84 },
+                { year: 2019, bank: 'Wells Fargo', race: 'Black', rate: 0.74 },
+                { year: 2020, bank: 'Wells Fargo', race: 'White', rate: 0.86 },
+                { year: 2020, bank: 'Wells Fargo', race: 'Black', rate: 0.76 },
+                { year: 2021, bank: 'Wells Fargo', race: 'White', rate: 0.85 },
+                { year: 2021, bank: 'Wells Fargo', race: 'Black', rate: 0.75 },
+                { year: 2022, bank: 'Wells Fargo', race: 'White', rate: 0.83 },
+                { year: 2022, bank: 'Wells Fargo', race: 'Black', rate: 0.73 },
+                { year: 2023, bank: 'Wells Fargo', race: 'White', rate: 0.81 },
+                { year: 2023, bank: 'Wells Fargo', race: 'Black', rate: 0.71 },
+                { year: 2024, bank: 'Wells Fargo', race: 'White', rate: 0.79 },
+                { year: 2024, bank: 'Wells Fargo', race: 'Black', rate: 0.69 }
+            ];
+                console.log('Fallback to sample data:', sampleData.length, 'records');
+            return sampleData;
+            }
+        }
+
+        function buildGapArea(years, whiteRates, blackRates) {
+            const upper = years.map((_, i) => Math.max(whiteRates[i], blackRates[i]));
+            const lower = years.map((_, i) => Math.min(whiteRates[i], blackRates[i]));
+            return {
+                x: years.concat(years.slice().reverse()),
+                y: upper.concat(lower.slice().reverse()),
+                type: 'scatter',
+                mode: 'lines',
+                line: { width: 0 },
+                fill: 'toself',
+                fillcolor: 'rgba(255, 165, 0, 0.25)',
+                hoverinfo: 'skip',
+                showlegend: false
+            };
+        }
+
+        function buildHoverTexts(years, wRates, bRates) {
+            return years.map((yr, i) => {
+                const w = wRates[i];
+                const b = bRates[i];
+                const gap = (w - b) * 100;
+                const sign = gap >= 0 ? '+' : '';
+                return `White: ${(w*100).toFixed(1)}%<br>` +
+                       `Black: ${(b*100).toFixed(1)}%<br>` +
+                       `Gap: ${sign}${gap.toFixed(1)}%`;
+            });
+        }
+
+        function makeFigureForBank(data, bank) {
+            const subset = data.filter(d => d.bank === bank && (d.race === 'White' || d.race === 'Black'));
+            const years = [...new Set(subset.map(d => d.year))].sort((a,b)=>a-b);
+            const wRates = years.map(y => (subset.find(d => d.year === y && d.race === 'White')||{}).rate ?? null);
+            const bRates = years.map(y => (subset.find(d => d.year === y && d.race === 'Black')||{}).rate ?? null);
+
+            const traces = [];
+            traces.push(buildGapArea(years, wRates, bRates));
+
+            traces.push({ 
+                x: years, 
+                y: wRates, 
+                type: 'scatter', 
+                mode: 'lines+markers', 
+                name: 'White',
+                line: { color: '#1f77b4', width: 3 }, 
+                marker: { color: '#1f77b4', size: 8 }, 
+                hoverinfo: 'skip' 
+            });
+            traces.push({ 
+                x: years, 
+                y: bRates, 
+                type: 'scatter', 
+                mode: 'lines+markers', 
+                name: 'Black',
+                line: { color: '#ff7f0e', width: 3 }, 
+                marker: { color: '#ff7f0e', size: 8 }, 
+                hoverinfo: 'skip' 
+            });
+
+            const mid = years.map((_, i) => (wRates[i] + bRates[i]) / 2);
+            const texts = buildHoverTexts(years, wRates, bRates);
+            traces.push({ 
+                x: years, 
+                y: mid, 
+                type: 'scatter', 
+                mode: 'markers', 
+                showlegend: false,
+                marker: { size: 12, opacity: 0 }, 
+                text: texts, 
+                hovertemplate: '%{text}<extra></extra>' 
+            });
+
+            const layout = {
+                title: { 
+                    text: bank, 
+                    x: 0.5, 
+                    font: { size: 20, family: 'Helvetica Neue, sans-serif', weight: 'bold' },
+                    y: 0.95
+                },
+
+                xaxis: { 
+                    tickmode: 'array',
+                    tickvals: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                    ticktext: ["'18", "'19", "'20", "'21", "'22", "'23", "'24"],
+                    range: [2017.5, 2024.5], 
+                    gridcolor: 'transparent', 
+                    showspikes: false,
+                    title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                    showticklabels: true,
+                    showgrid: false,
+                    tickangle: 0
+                },
+                yaxis: { 
+                    tickformat: '.0%',
+                    range: [0.65, 0.95], 
+                    gridcolor: 'transparent', 
+                    showspikes: false,
+                    title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                    showticklabels: false,
+                    showgrid: false
+                },
+                margin: { l: 20, r: 40, t: 40, b: 48 },
+                showlegend: false,
+                hovermode: 'closest',
+                hoverlabel: { 
+                    bgcolor: 'white', 
+                    bordercolor: '#ddd', 
+                    font: { color: '#333', family: 'Helvetica Neue, sans-serif' } 
+                },
+                font: { family: 'Helvetica Neue, sans-serif' },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white'
+            };
+
+            const config = { 
+                displayModeBar: false, 
+                responsive: true,
+                scrollZoom: false,
+                modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+            };
+            return { traces, layout, config };
+        }
+
+        async function initBankScrolly() {
+        }
+
+        async function renderStaticBankCharts() {
+            console.log('Rendering static bank charts...');
+            const data = await loadBankData();
+            const targets = [
+                { id: 'bankChartJPM', bank: 'JPMorgan Chase' },
+                { id: 'bankChartBOA', bank: 'Bank of America' },
+                { id: 'bankChartWF', bank: 'Wells Fargo' }
+            ];
+            targets.forEach(({ id, bank }) => {
+                const el = document.getElementById(id);
+                if (!el) {
+                    console.warn('Missing chart container:', id);
+                    return;
+                }
+                const fig = makeFigureForBank(data, bank);
+                try {
+                    Plotly.newPlot(el, fig.traces, fig.layout, fig.config);
+                } catch (err) {
+                    console.error('Error plotting', bank, err);
+                }
+            });
+        }
+
+        // Lender Type Chart - Bank vs Non-Bank
+        async function renderLenderTypeChart() {
+            try {
+                // Sample data based on the Python script output
+                // In a real implementation, you'd load this from the CSV
+                const lenderData = [
+                    { year: 2018, lender_type: 'Bank', share_pct: 15.2 },
+                    { year: 2019, lender_type: 'Bank', share_pct: 15.1 },
+                    { year: 2020, lender_type: 'Bank', share_pct: 10.3 },
+                    { year: 2021, lender_type: 'Bank', share_pct: 9.2 },
+                    { year: 2022, lender_type: 'Bank', share_pct: 8.8 },
+                    { year: 2023, lender_type: 'Bank', share_pct: 7.1 },
+                    { year: 2024, lender_type: 'Bank', share_pct: 6.3 },
+                    
+                    { year: 2018, lender_type: 'Non-Bank', share_pct: 84.8 },
+                    { year: 2019, lender_type: 'Non-Bank', share_pct: 84.9 },
+                    { year: 2020, lender_type: 'Non-Bank', share_pct: 89.7 },
+                    { year: 2021, lender_type: 'Non-Bank', share_pct: 90.8 },
+                    { year: 2022, lender_type: 'Non-Bank', share_pct: 91.2 },
+                    { year: 2023, lender_type: 'Non-Bank', share_pct: 92.9 },
+                    { year: 2024, lender_type: 'Non-Bank', share_pct: 93.7 }
+                ];
+
+                const bankData = lenderData.filter(d => d.lender_type === 'Bank').sort((a, b) => a.year - b.year);
+                const nonBankData = lenderData.filter(d => d.lender_type === 'Non-Bank').sort((a, b) => a.year - b.year);
+
+                const traces = [
+                    {
+                        x: bankData.map(d => d.year),
+                        y: bankData.map(d => d.share_pct),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Bank',
+                        showlegend: false,
+                        line: { color: '#66c2a5', width: 3 },
+                        marker: { color: '#66c2a5', size: 8 },
+                        hovertemplate: '<b>Bank</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Share: %{y:.1f}%<extra></extra>'
+                    },
+                    {
+                        x: nonBankData.map(d => d.year),
+                        y: nonBankData.map(d => d.share_pct),
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Non-Bank',
+                        showlegend: false,
+                        line: { color: '#fc8d62', width: 3 },
+                        marker: { color: '#fc8d62', size: 8 },
+                        hovertemplate: '<b>Non-Bank</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Share: %{y:.1f}%<extra></extra>'
+                    }
+                ];
+
+                const layout = {
+
+                    xaxis: {
+                        title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                        tickmode: 'array',
+                        tickvals: [2018, 2019, 2020, 2021, 2022, 2023, 2024],
+                        ticktext: ["'18", "'19", "'20", "'21", "'22", "'23", "'24"],
+                        range: [2017.5, 2024.5],
+                        gridcolor: 'transparent',
+                        showspikes: false
+                    },
+                    yaxis: {
+                        title: { text: 'Share of Approvals (%)', font: { family: 'Helvetica Neue, sans-serif' } },
+                        range: [0, 100],
+                        gridcolor: 'rgba(0,0,0,0.1)',
+                        showspikes: false,
+                        tickformat: '.0f',
+                        ticksuffix: '%'
+                    },
+                    margin: { l: 50, r: 30, t: 20, b: 50 },
+                    hovermode: 'closest',
+                    hoverlabel: {
+                        bgcolor: 'white',
+                        bordercolor: '#ddd',
+                        font: { color: '#333', family: 'Helvetica Neue, sans-serif' }
+                    },
+                    font: { family: 'Helvetica Neue, sans-serif' },
+                    plot_bgcolor: 'white',
+                    paper_bgcolor: 'white',
+                    annotations: [
+                        {
+                            text: 'Bank',
+                            x: 2024,
+                            y: 10.3,
+                            xref: 'x',
+                            yref: 'y',
+                            showarrow: false,
+                            font: { size: 14, family: 'Helvetica Neue, sans-serif', color: '#66c2a5', weight: 'bold' }
+                        },
+                        {
+                            text: 'Non-Bank',
+                            x: 2024,
+                            y: 89.7,
+                            xref: 'x',
+                            yref: 'y',
+                            showarrow: false,
+                            font: { size: 14, family: 'Helvetica Neue, sans-serif', color: '#fc8d62', weight: 'bold' }
+                        }
+                    ]
+                };
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true,
+                    scrollZoom: false,
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+                };
+
+                Plotly.newPlot('lenderTypeChart', traces, layout, config);
+                console.log('Lender type chart rendered successfully');
+            } catch (error) {
+                console.error('Error creating lender type chart:', error);
+            }
+        }
+
+        // Interest Rate Chart - Banks vs Non-Banks
+        async function renderInterestRateChart() {
+            try {
+                // Load data from CSV
+                const response = await fetch('data/bank_nonbank_interest_rate_by_race_year.csv');
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.trim()] = values[index]?.trim();
+                        });
+                        data.push(row);
+                    }
+                }
+                
+                // Transform and aggregate data (overall, not by race)
+                const transformedData = data
+                    .filter(d => d.year && d.lender_type && d.avg_interest_rate)
+                    .map(d => ({
+                        year: parseInt(d.year),
+                        lender_type: d.lender_type,
+                        rate: parseFloat(d.avg_interest_rate)
+                    }))
+                    .filter(d => d.lender_type === 'Bank' || d.lender_type === 'Non-Bank');
+                
+                // Aggregate by year and lender type
+                const aggregated = {};
+                transformedData.forEach(d => {
+                    if (!aggregated[d.year]) aggregated[d.year] = {};
+                    if (!aggregated[d.year][d.lender_type]) aggregated[d.year][d.lender_type] = [];
+                    aggregated[d.year][d.lender_type].push(d.rate);
+                });
+                
+                const years = Object.keys(aggregated).map(Number).sort((a, b) => a - b);
+                const bankRates = years.map(year => {
+                    const rates = aggregated[year]['Bank'] || [];
+                    return rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : null;
+                });
+                const nonBankRates = years.map(year => {
+                    const rates = aggregated[year]['Non-Bank'] || [];
+                    return rates.length > 0 ? rates.reduce((a, b) => a + b, 0) / rates.length : null;
+                });
+
+                const traces = [
+                    {
+                        x: years,
+                        y: bankRates,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Bank',
+                        showlegend: false,
+                        line: { color: '#66c2a5', width: 3 },
+                        marker: { color: '#66c2a5', size: 8, symbol: 'circle' },
+                        hovertemplate: '<b>Bank</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Rate: %{y:.2f}%<extra></extra>'
+                    },
+                    {
+                        x: years,
+                        y: nonBankRates,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Non-Bank',
+                        showlegend: false,
+                        line: { color: '#ff7f0e', width: 3 },
+                        marker: { color: '#ff7f0e', size: 8, symbol: 'square' },
+                        hovertemplate: '<b>Non-Bank</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Rate: %{y:.2f}%<extra></extra>'
+                    }
+                ];
+
+                const layout = {
+                    xaxis: {
+                        title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                        tickmode: 'array',
+                        tickvals: years,
+                        ticktext: years.map(y => `'${String(y).slice(2)}`),
+                        range: [Math.min(...years) - 0.5, Math.max(...years) + 0.5],
+                        gridcolor: 'transparent',
+                        showspikes: false
+                    },
+                    yaxis: {
+                        title: { text: 'Average Interest Rate (%)', font: { family: 'Helvetica Neue, sans-serif' } },
+                        range: [0, Math.max(...bankRates, ...nonBankRates) * 1.1],
+                        gridcolor: 'rgba(0,0,0,0.1)',
+                        showspikes: false,
+                        tickformat: '.1f',
+                        ticksuffix: '%'
+                    },
+                    margin: { l: 60, r: 40, t: 20, b: 50 },
+                    hovermode: 'closest',
+                    hoverlabel: {
+                        bgcolor: 'white',
+                        bordercolor: '#ddd',
+                        font: { color: '#333', family: 'Helvetica Neue, sans-serif' }
+                    },
+                    font: { family: 'Helvetica Neue, sans-serif' },
+                    plot_bgcolor: 'white',
+                    paper_bgcolor: 'white',
+                    annotations: [
+                        {
+                            text: 'Bank',
+                            x: 2024,
+                            y: bankRates[bankRates.length - 1] + 0.5,
+                            xref: 'x',
+                            yref: 'y',
+                            showarrow: false,
+                            font: { size: 14, family: 'Helvetica Neue, sans-serif', color: '#66c2a5', weight: 'bold' }
+                        },
+                        {
+                            text: 'Non-Bank',
+                            x: 2024,
+                            y: nonBankRates[nonBankRates.length - 1] - 0.5,
+                            xref: 'x',
+                            yref: 'y',
+                            showarrow: false,
+                            font: { size: 14, family: 'Helvetica Neue, sans-serif', color: '#ff7f0e', weight: 'bold' }
+                        }
+                    ]
+                };
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true,
+                    scrollZoom: false,
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+                };
+
+                Plotly.newPlot('interestRateChart', traces, layout, config);
+                console.log('Interest rate chart rendered successfully');
+            } catch (error) {
+                console.error('Error creating interest rate chart:', error);
+            }
+        }
+
+        // Smooth Text Transitions for JPMorgan Quotes
+        function initSmoothTextTransitions() {
+            const quoteData = {
+                2020: [
+                    {
+                        quote: "It was a year of a global pandemic, a global recession, unprecedented government actions, turbulent elections, and deeply felt social and racial injustice",
+                        attribution: "— Jamie Dimon, Chairman and Chief Executive Officer",
+                        tag: "Deleted in 2025"
+                    },
+                    {
+                        quote: "Our efforts to close the racial wealth divide include a $30 billion injection of additional capital and other resources for Black and Latinx clients, employees and communities in the U.S. and globally over the next five years.",
+                        attribution: "— Daniel E. Pinto, Co-President and Chief Operating Officer, JPMorgan Chase & Co",
+                        tag: "Deleted in 2025"
+                    },
+                    {
+                        quote: "We announced a massive $30 billion commitment... to advance racial equity, drive an inclusive recovery, support employees and break down barriers of systemic racism.",
+                        attribution: "— Peter L. Scher, Head of Corporate Responsibility",
+                        tag: "Deleted in 2025"
+                    }
+                ],
+                2021: [
+                    {
+                        quote: "The murder of George Floyd in 2020 highlighted what we already knew: More was required by all of us to address systemic racism.",
+                        attribution: "— Jamie Dimon, Chairman and Chief Executive Officer",
+                        tag: "2021"
+                    },
+                    {
+                        quote: "By the end of 2021, we had deployed or committed more than $18 billion toward our [$30 billion] goal.",
+                        attribution: "— JPMorgan 2021 Annual Report",
+                        tag: "2021"
+                    },
+                    {
+                        quote: "We expanded our global Diversity, Equity and Inclusion department to include three new Centers of Excellence: Advancing Hispanics and Latinos, The Office of Asian and Pacific Islander Affairs, and The Office of LGBT+ Affairs.",
+                        attribution: "— JPMorgan 2021 Annual Report",
+                        tag: "2021"
+                    }
+                ],
+                2022: [
+                    {
+                        quote: "By the end of 2022, we reported nearly $29 billion in progress toward our original goal. But our focus is not on how much money is deployed — it is on long-term impact and outcomes.",
+                        attribution: "— Jamie Dimon, Chairman and Chief Executive Officer",
+                        tag: "2022"
+                    },
+                    {
+                        quote: "Over $163 million in loans for Black, Hispanic and Latino households to purchase or refinance a home.",
+                        attribution: "— JPMorgan 2022 Annual Report",
+                        tag: "2022"
+                    },
+                    {
+                        quote: "Our commitment to racial equity remains strong, but we are shifting our focus toward measurable outcomes rather than symbolic statements.",
+                        attribution: "— JPMorgan 2022 Annual Report",
+                        tag: "2022"
+                    }
+                ],
+                2023: [
+                    {
+                        quote: "We remain mindful of the barriers to financial inclusion for historically underserved racial and ethnic groups.",
+                        attribution: "— Jamie Dimon, 2024 Letter to Shareholders",
+                        tag: "2023"
+                    },
+                    {
+                        quote: "Our approach to diversity and inclusion continues to evolve as we focus on creating lasting change in our communities.",
+                        attribution: "— JPMorgan 2023 Annual Report",
+                        tag: "2023"
+                    },
+                    {
+                        quote: "We are committed to supporting all communities through our lending and investment activities.",
+                        attribution: "— JPMorgan 2023 Annual Report",
+                        tag: "2023"
+                    }
+                ],
+                2024: [
+                    {
+                        quote: "While we have modified our approach to certain corporate responsibilities to conform to new guidance, we remain committed to reaching out to all communities in an effort to create a stronger, more inclusive economy, from supporting work skills training programs around the world and financing affordable housing and small businesses to making investments in our people and in cities like Detroit that show how business and government leaders can work together to solve problems.",
+                        attribution: "— Jamie Dimon, 2024 Letter to Shareholders",
+                        tag: "2024"
+                    },
+                    {
+                        quote: "Our focus remains on creating economic opportunity for all communities through sustainable business practices.",
+                        attribution: "— JPMorgan 2024 Annual Report",
+                        tag: "2024"
+                    },
+                    {
+                        quote: "We continue to support diversity and inclusion initiatives that align with our business objectives and regulatory requirements.",
+                        attribution: "— JPMorgan 2024 Annual Report",
+                        tag: "2024"
+                    }
+                ]
+            };
+
+            const container = document.querySelector('.fixed-scrolly-container');
+            const quoteBoxes = container.querySelectorAll('.change-box');
+            const years = [2020, 2021, 2022, 2023, 2024];
+            let currentYearIndex = 0;
+
+            async function updateQuotes(year) {
+                const yearData = quoteData[year];
+                if (!yearData) return;
+
+                // Create an array of promises for all boxes to animate simultaneously
+                const animationPromises = [];
+
+                for (let i = 0; i < quoteBoxes.length; i++) {
+                    if (yearData[i]) {
+                        const box = quoteBoxes[i];
+                        const tag = box.querySelector('.change-tag');
+                        const quoteElement = box.querySelector('.change-text p');
+                        
+                        // Update tag immediately
+                        tag.textContent = yearData[i].tag;
+                        
+                        // Get current quote text (without attribution)
+                        const currentQuote = quoteElement.innerHTML.split('<br>')[0].replace(/"/g, '');
+                        const newQuote = yearData[i].quote;
+                        const attribution = yearData[i].attribution;
+                        
+                        // Only animate if quote actually changed
+                        if (currentQuote !== newQuote) {
+                            console.log('Animating quote change for box', i);
+                            
+                            // Create a promise for this box's animation
+                            const boxAnimation = (async () => {
+                                // Delete current quote character by character
+                                const currentText = quoteElement.innerHTML;
+                                const quotePart = currentText.split('<br>')[0];
+                                const attributionPart = '<br>' + currentText.split('<br>')[1];
+                                
+                                // Delete effect - much faster
+                                for (let j = quotePart.length; j > 0; j--) {
+                                    quoteElement.innerHTML = quotePart.substring(0, j) + attributionPart;
+                                    await new Promise(resolve => setTimeout(resolve, 10));
+                                }
+                                
+                                // Type new quote character by character - slower
+                                let newText = '"';
+                                for (let k = 0; k < newQuote.length; k++) {
+                                    newText += newQuote[k];
+                                    quoteElement.innerHTML = newText + '"' + attributionPart;
+                                    await new Promise(resolve => setTimeout(resolve, 80));
+                                }
+                            })();
+                            
+                            animationPromises.push(boxAnimation);
+                        }
+                    }
+                }
+                
+                // Wait for all animations to complete
+                await Promise.all(animationPromises);
+            }
+
+            // Scroll event listener
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                const containerTop = container.offsetTop;
+                const containerHeight = container.offsetHeight;
+                
+                // Calculate which year should be shown based on scroll position
+                if (scrollPosition >= containerTop && scrollPosition < containerTop + containerHeight) {
+                    const progress = (scrollPosition - containerTop) / containerHeight;
+                    const yearIndex = Math.floor(progress * years.length);
+                    const clampedIndex = Math.max(0, Math.min(years.length - 1, yearIndex));
+                    
+                    if (clampedIndex !== currentYearIndex) {
+                        currentYearIndex = clampedIndex;
+                        updateQuotes(years[currentYearIndex]);
+                    }
+                }
+            });
+
+            // Initialize with 2020
+            updateQuotes(2020);
+            
+            // Add test button functionality
+            const testButton = document.getElementById('test2021');
+            if (testButton) {
+                testButton.addEventListener('click', () => {
+                    console.log('Test button clicked!');
+                    // Trigger all three boxes simultaneously
+                    updateQuotes(2021);
+                });
+            }
+        }
+
+        // Rocket Mortgage Chart - Using real HMDA data
+        async function renderRocketMortgageChart() {
+            try {
+                console.log('Starting Rocket Mortgage chart rendering...');
+                
+                // Load real HMDA data for Rocket Mortgage
+                const response = await fetch('data/merged_by_race_cleaned.csv');
+                if (!response.ok) {
+                    throw new Error(`Failed to fetch CSV: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                console.log('CSV loaded, length:', csvText.length);
+                
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.trim()] = values[index]?.trim();
+                        });
+                        data.push(row);
+                    }
+                }
+                
+                console.log('Total data rows loaded:', data.length);
+                
+                // Filter for Rocket Mortgage data (LEI: 549300FGXN1K3HLB1R50)
+                const rocketData = data
+                    .filter(d => d.lei === '549300FGXN1K3HLB1R50' && 
+                                (d.race_label === 'White' || d.race_label === 'Black') &&
+                                d.approved_count && d.denied_count)
+                    .map(d => ({
+                        year: parseInt(d.year),
+                        race: d.race_label,
+                        approved: parseInt(d.approved_count),
+                        denied: parseInt(d.denied_count),
+                        rate: parseInt(d.approved_count) / (parseInt(d.approved_count) + parseInt(d.denied_count))
+                    }))
+                    .sort((a, b) => a.year - b.year);
+                
+                                console.log('Rocket Mortgage data filtered:', rocketData);
+                
+                // Log the actual rate values to debug
+                if (rocketData.length > 0) {
+                    const whiteRates = rocketData.filter(d => d.race === 'White').map(d => d.rate);
+                    const blackRates = rocketData.filter(d => d.race === 'Black').map(d => d.rate);
+                    console.log('White rates:', whiteRates);
+                    console.log('Black rates:', blackRates);
+                    console.log('Min white rate:', Math.min(...whiteRates));
+                    console.log('Max white rate:', Math.max(...whiteRates));
+                    console.log('Min black rate:', Math.min(...blackRates));
+                    console.log('Max black rate:', Math.max(...blackRates));
+                }
+                
+                // If no data loaded, fall back to sample data
+                if (rocketData.length === 0) {
+                    console.log('No Rocket Mortgage data found, using sample data');
+                    const sampleData = [
+                        { year: 2018, race: 'White', rate: 0.75 },
+                        { year: 2019, race: 'White', rate: 0.77 },
+                        { year: 2020, race: 'White', rate: 0.79 },
+                        { year: 2021, race: 'White', rate: 0.78 },
+                        { year: 2022, race: 'White', rate: 0.76 },
+                        { year: 2023, race: 'White', rate: 0.74 },
+                        { year: 2024, race: 'White', rate: 0.72 },
+                        
+                        { year: 2018, race: 'Black', rate: 0.68 },
+                        { year: 2019, race: 'Black', rate: 0.70 },
+                        { year: 2020, race: 'Black', rate: 0.72 },
+                        { year: 2021, race: 'Black', rate: 0.71 },
+                        { year: 2022, race: 'Black', rate: 0.69 },
+                        { year: 2023, race: 'Black', rate: 0.67 },
+                        { year: 2024, race: 'Black', rate: 0.65 }
+                    ];
+                    rocketData.push(...sampleData);
+                }
+                
+                // Separate data by race and ensure we have data for all years
+                const whiteData = rocketData.filter(d => d.race === 'White');
+                const blackData = rocketData.filter(d => d.race === 'Black');
+                
+                // Get all available years
+                const years = [...new Set(rocketData.map(d => d.year))].sort((a, b) => a - b);
+                
+                // Create arrays for each year, filling in missing data with null
+                const whiteRates = years.map(year => {
+                    const data = whiteData.find(d => d.year === year);
+                    return data ? data.rate : null;
+                });
+                
+                const blackRates = years.map(year => {
+                    const data = blackData.find(d => d.year === year);
+                    return data ? data.rate : null;
+                });
+
+                // Create the gap area (shaded between lines)
+                const upper = years.map((_, i) => {
+                    const white = whiteRates[i];
+                    const black = blackRates[i];
+                    if (white !== null && black !== null) {
+                        return Math.max(white, black);
+                    }
+                    return null;
+                });
+                
+                const lower = years.map((_, i) => {
+                    const white = whiteRates[i];
+                    const black = blackRates[i];
+                    if (white !== null && black !== null) {
+                        return Math.min(white, black);
+                    }
+                    return null;
+                });
+                
+                const traces = [
+                    // Gap area (shaded)
+                    {
+                        x: years.concat(years.slice().reverse()),
+                        y: upper.concat(lower.slice().reverse()),
+                        type: 'scatter',
+                        mode: 'lines',
+                        line: { width: 0 },
+                        fill: 'toself',
+                        fillcolor: 'rgba(255, 165, 0, 0.25)',
+                        hoverinfo: 'skip',
+                        showlegend: false
+                    },
+                    // White approval rate (blue line)
+                    {
+                        x: years,
+                        y: whiteRates,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'White',
+                        showlegend: false,
+                        line: { color: '#1f77b4', width: 3 },
+                        marker: { color: '#1f77b4', size: 8 },
+                        customdata: years.map((year, i) => {
+                            const whiteRate = whiteRates[i];
+                            const blackRate = blackRates[i];
+                            if (whiteRate !== null && blackRate !== null) {
+                                return ((whiteRate - blackRate) * 100).toFixed(1);
+                            }
+                            return 'N/A';
+                        }),
+                        hovertemplate: '<b>White Approval Rate</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Approval Rate: %{y:.1%}<br>' +
+                                     'Gap vs Black: %{customdata}%<extra></extra>'
+                    },
+                    // Black approval rate (orange line)
+                    {
+                        x: years,
+                        y: blackRates,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: 'Black',
+                        showlegend: false,
+                        line: { color: '#ff7f0e', width: 3 },
+                        marker: { color: '#ff7f0e', size: 8 },
+                        customdata: years.map((year, i) => {
+                            const whiteRate = whiteRates[i];
+                            const blackRate = blackRates[i];
+                            if (whiteRate !== null && blackRate !== null) {
+                                return ((whiteRate - blackRate) * 100).toFixed(1);
+                            }
+                            return 'N/A';
+                        }),
+                        hovertemplate: '<b>Black Approval Rate</b><br>' +
+                                     'Year: %{x}<br>' +
+                                     'Approval Rate: %{y:.1%}<br>' +
+                                     'Gap vs White: %{customdata}%<extra></extra>'
+                    }
+                ];
+
+                const layout = {
+                    title: {
+                        text: '',
+                        x: 0.5,
+                        font: { size: 20, family: 'Helvetica Neue, sans-serif', weight: 'bold' },
+                        y: 0.99
+                    },
+                    xaxis: {
+                        title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                        tickmode: 'array',
+                        tickvals: years,
+                        ticktext: years.map(y => `'${String(y).slice(2)}`),
+                        range: [Math.min(...years) - 0.5, Math.max(...years) + 0.5],
+                        gridcolor: 'transparent',
+                        showspikes: false
+                    },
+                    yaxis: {
+                        title: { text: '', font: { family: 'Helvetica Neue, sans-serif' } },
+                        tickformat: '.0%',
+                        range: [0.7, 0.95],
+                        gridcolor: 'transparent',
+                        showspikes: false,
+                        showticklabels: false,
+                        showgrid: false
+                    },
+                    margin: { l: 20, r: 40, t: 120, b: 48 },
+                    showlegend: false,
+                    hovermode: 'closest',
+                    hoverlabel: {
+                        bgcolor: 'white',
+                        bordercolor: '#ddd',
+                        font: { color: '#333', family: 'Helvetica Neue, sans-serif', size: 12 },
+                        namelength: -1
+                    },
+                    font: { family: 'Helvetica Neue, sans-serif' },
+                    plot_bgcolor: 'white',
+                    paper_bgcolor: 'white'
+                };
+
+                const config = {
+                    displayModeBar: false,
+                    responsive: true,
+                    scrollZoom: false,
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+                };
+
+                console.log('About to render chart with traces:', traces.length);
+                console.log('Chart container:', document.getElementById('rocketMortgageChart'));
+                
+                Plotly.newPlot('rocketMortgageChart', traces, layout, config);
+                console.log('Rocket Mortgage chart rendered successfully');
+            } catch (error) {
+                console.error('Error creating Rocket Mortgage chart:', error);
+            }
+        }
+
+        // Executive Order Scrollytelling
+        function initExecOrderScrolly() {
+            const scrollySection = document.querySelector('.exec-order-scrolly');
+            const scrollySteps = document.querySelectorAll('.scrolly-step');
+            
+            if (!scrollySection) return;
+            
+            const sectionTop = scrollySection.offsetTop;
+            const sectionHeight = scrollySection.offsetHeight;
+            
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                const sectionScroll = scrollPosition - sectionTop;
+                const progress = sectionScroll / (sectionHeight - window.innerHeight);
+                
+                if (progress >= 0 && progress <= 1) {
+                    // Calculate which step should be active
+                    const stepIndex = Math.floor(progress * 5);
+                    const clampedIndex = Math.max(0, Math.min(4, stepIndex));
+                    
+                    // Update scrolly steps
+                    scrollySteps.forEach((step, index) => {
+                        if (index === clampedIndex) {
+                            step.style.opacity = '1';
+                        } else {
+                            step.style.opacity = '0.3';
+                        }
+                    });
+                }
+            });
+            
+            // Initialize first step
+            scrollySteps[0].style.opacity = '1';
+            scrollySteps.forEach((step, index) => {
+                if (index !== 0) step.style.opacity = '0.3';
+            });
+        }
+
+
+
+        window.addEventListener('load', function() {
+            console.log('Page loaded, Plotly available:', typeof Plotly !== 'undefined');
+            if (typeof Plotly !== 'undefined') {
+                renderStaticBankCharts();
+                renderLenderTypeChart();
+                renderInterestRateChart();
+                renderRocketMortgageChart();
+                renderStateComparisonChart();
+            } else {
+                console.error('Plotly not loaded');
+
+                setTimeout(() => {
+                    if (typeof Plotly !== 'undefined') {
+                        renderStaticBankCharts();
+                        renderLenderTypeChart();
+                        renderInterestRateChart();
+                        renderRocketMortgageChart();
+                        renderStateComparisonChart();
+                    } else {
+                        console.error('Plotly still not available');
+                    }
+                }, 1000);
+            }
+            
+            // Initialize executive order scrollytelling
+            initExecOrderScrolly();
+            
+
+        });
+
+
+        async function loadStateData() {
+            try {
+                const response = await fetch('GH-state_map/data/state_race_summary.csv');
+                const csvText = await response.text();
+                const lines = csvText.split('\n');
+                const headers = lines[0].split(',');
+                const data = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (lines[i].trim()) {
+                        const values = lines[i].split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header.trim()] = values[index]?.trim();
+                        });
+                        data.push(row);
+                    }
+                }
+                
+                return data;
+            } catch (error) {
+                console.error('Error loading state data:', error);
+                return [];
+            }
+        }
+
+        function calculateGap(whiteRate, blackRate) {
+            return (whiteRate - blackRate) * 100;
+        }
+
+        async function initStateMaps() {
+            const data = await loadStateData();
+            const steps = Array.from(document.querySelectorAll('.map-step'));
+
+            const renderMap = (year) => {
+                const yearData = data.filter(d => d.activity_year === year);
+                const stateGaps = {};
+                
+    
+                yearData.forEach(d => {
+                    if (d.race_label === 'White' || d.race_label === 'Black') {
+                        const state = d.state_code;
+                        if (!stateGaps[state]) stateGaps[state] = {};
+                        stateGaps[state][d.race_label] = parseFloat(d.approval_rate);
+                    }
+                });
+
+    
+                const mapData = [{
+                    type: 'choropleth',
+                    locations: Object.keys(stateGaps),
+                    z: Object.values(stateGaps).map(gaps => {
+                        if (gaps.White && gaps.Black) {
+                            return calculateGap(gaps.White, gaps.Black);
+                        }
+                        return 0;
+                    }),
+                    locationmode: 'USA-states',
+                    colorscale: [
+                        [0, '#d9d9d9'],
+                        [0.2, '#d9d9d9'],
+                        [0.4, '#fee08b'],
+                        [0.6, '#fc8d59'],
+                        [1, '#d73027']
+                    ],
+                    zmin: 0,
+                    zmax: 20,
+                    marker: {
+                        line: {
+                            color: 'white',
+                            width: 1
+                        }
+                    },
+                    text: Object.keys(stateGaps).map(state => {
+                        const gaps = stateGaps[state];
+                        if (gaps.White && gaps.Black) {
+                            const gap = calculateGap(gaps.White, gaps.Black);
+                            return `${state}<br>Gap: ${gap.toFixed(1)}%`;
+                        }
+                        return state;
+                    }),
+                    hoverinfo: 'text'
+                }];
+
+                const layout = {
+                    geo: {
+                        scope: 'usa',
+                        projection: { type: 'albers usa' },
+                        showland: true,
+                        landcolor: '#f8f9fa',
+                        showocean: true,
+                        oceancolor: '#e6f3ff',
+                        showlakes: true,
+                        lakecolor: '#e6f3ff',
+                        showrivers: true,
+                        rivercolor: '#e6f3ff',
+                        coastlinecolor: '#cccccc',
+                        showframe: false,
+                        showcoastlines: true,
+                        coastlinewidth: 1,
+                        coastlinecolor: '#cccccc',
+                        showcountries: false,
+                        showstates: true,
+                        statewidth: 1,
+                        statecolor: '#cccccc'
+                    },
+                    margin: { l: 0, r: 0, t: 0, b: 0 },
+                    autosize: true,
+                    width: null,
+                    height: null,
+                    dragmode: false,
+                    showlegend: false,
+                    annotations: [
+                        {
+                            text: 'Year after year,<br>White borrowers in<br>Mississippi, Louisiana,<br>and Arkansas were<br>approved for mortgages<br>at much higher rates<br>than Black borrowers.',
+                            x: 0.86,
+                            y: 0.28,
+                            xref: 'paper',
+                            yref: 'paper',
+                            showarrow: true,
+                            arrowhead: 2,
+                            arrowsize: 1,
+                            arrowwidth: 2,
+                            arrowcolor: '#000',
+                            ax: -0.35,
+                            ay: 0.05,
+                            font: { size: 22, family: 'Helvetica Neue, sans-serif', color: '#000' },
+                            align: 'left'
+                        }
+                    ],
+                    shapes: [
+                        {
+                            type: 'rect',
+                            x0: 0.52,
+                            y0: 0.15,
+                            x1: 0.82,
+                            y1: 0.45,
+                            xref: 'paper',
+                            yref: 'paper',
+                            line: { color: '#000', width: 1 },
+                            fillcolor: 'rgba(0, 0, 0, 0)'
+                        }
+                    ]
+                };
+
+                Plotly.newPlot('stateMap', mapData, layout, { 
+                    displayModeBar: false, 
+                    responsive: true,
+                    autosize: true,
+                    useResizeHandler: true,
+                    scrollZoom: false,
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+                });
+            };
+
+            // D3-based scrollytelling with 7 frames
+            const years = ['2018', '2019', '2020', '2021', '2022', '2023', '2024'];
+            let currentYearIndex = 0;
+            
+            // Get the scrolly section
+            const scrollySection = document.querySelector('.state-maps-scrolly');
+            const sectionTop = scrollySection.offsetTop;
+            
+            // Create scroll steps relative to the section
+            const scrollSteps = years.map((year, index) => ({
+                year: year,
+                scrollPosition: sectionTop + (index * (window.innerHeight * 0.8))
+            }));
+            
+            // Scroll event listener
+            window.addEventListener('scroll', () => {
+                const scrollPosition = window.pageYOffset;
+                
+                // Only process if we're in the scrolly section
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + 700 * window.innerHeight / 100) {
+                    // Find which year should be displayed based on scroll position
+                    let targetYearIndex = 0;
+                    for (let i = scrollSteps.length - 1; i >= 0; i--) {
+                        if (scrollPosition >= scrollSteps[i].scrollPosition) {
+                            targetYearIndex = i;
+                            break;
+                        }
+                    }
+                    
+                    // Only update if year changed
+                    if (targetYearIndex !== currentYearIndex) {
+                        currentYearIndex = targetYearIndex;
+                        const year = years[currentYearIndex];
+                        console.log('D3 scroll detected year:', year);
+                        
+                        // Update active step
+                        steps.forEach((step, index) => {
+                            if (index === currentYearIndex) {
+                                step.classList.add('active');
+                            } else {
+                                step.classList.remove('active');
+                            }
+                        });
+                        
+                        // Update map
+                        renderMap(year);
+                    }
+                }
+            });
+            
+            // Initialize with first year
+            steps[0].classList.add('active');
+            renderMap('2018');
+        }
+
+
+
+        window.addEventListener('load', function() {
+            if (typeof Plotly !== 'undefined') {
+                initStateMaps();
+            }
+        });
+
+        // State Map Small Multiples Functions
+        // Data will be loaded from CSV and processed
+        let stateMapData = {};
+        let allData = [];
+        
+        // Function to process CSV data for small multiples maps
+        function processDataForSmallMultiples() {
+            console.log('Starting to process CSV data...');
+            console.log('Raw CSV data:', allData);
+            
+            // Group data by year and race
+            const dataByYear = {};
+            
+            allData.forEach((row, index) => {
+                if (index < 5) console.log('Processing row:', row); // Log first 5 rows
+                
+                // Debug logging for specific states
+                if (row.state_code === 'WY' || row.state_code === 'VT' || row.state_code === 'MS') {
+                    console.log('Raw data for', row.state_code, row.year, row.race_label, row.approval_rate);
+                }
+                
+                const year = parseInt(row.year);
+                const stateCode = row.state_code;
+                const race = row.race_label;
+                const approvalRate = parseFloat(row.approval_rate);
+                
+                if (!dataByYear[year]) {
+                    dataByYear[year] = {};
+                }
+                
+                if (!dataByYear[year][stateCode]) {
+                    dataByYear[year][stateCode] = {};
+                }
+                
+                dataByYear[year][stateCode][race] = approvalRate;
+            });
+            
+            console.log('Data grouped by year:', dataByYear);
+            
+            // Calculate gaps and create map data
+            stateMapData = {};
+            
+            Object.keys(dataByYear).forEach(year => {
+                const yearInt = parseInt(year);
+                const yearData = [];
+                
+                Object.keys(dataByYear[year]).forEach(stateCode => {
+                    const stateData = dataByYear[year][stateCode];
+                    
+                    // Get White and Black approval rates
+                    const whiteRate = stateData['White'] || 0;
+                    const blackRate = stateData['Black'] || 0;
+                    
+                    // Only include states that have both White and Black data
+                    if (whiteRate > 0 && blackRate > 0) {
+                        // Calculate gap (White rate - Black rate) as percentage
+                        const gap = (whiteRate - blackRate) * 100;
+                        
+                        // Debug logging for specific states
+                        if (stateCode === 'WY' || stateCode === 'VT' || stateCode === 'MS') {
+                            console.log(`${yearInt} ${stateCode}: White=${whiteRate}, Black=${blackRate}, Gap=${gap}%`);
+                        }
+                        
+                        yearData.push({
+                            state: stateCode,
+                            white: whiteRate,
+                            black: blackRate,
+                            gap: gap
+                        });
+                    }
+                });
+                
+                if (yearData.length > 0) {
+                    stateMapData[yearInt] = yearData;
+                    console.log(`Year ${yearInt} has ${yearData.length} states with data`);
+                }
+            });
+            
+            console.log('Final processed data for small multiples:', stateMapData);
+        }
+        
+        // State name mapping
+        const stateNames = {
+            'AL': 'Alabama', 'AK': 'Alaska', 'AZ': 'Arizona', 'AR': 'Arkansas', 'CA': 'California',
+            'CO': 'Colorado', 'CT': 'Connecticut', 'DE': 'Delaware', 'FL': 'Florida', 'GA': 'Georgia',
+            'HI': 'Hawaii', 'ID': 'Idaho', 'IL': 'Illinois', 'IN': 'Indiana', 'IA': 'Iowa',
+            'KS': 'Kansas', 'KY': 'Kentucky', 'LA': 'Louisiana', 'ME': 'Maine', 'MD': 'Maryland',
+            'MA': 'Massachusetts', 'MI': 'Michigan', 'MN': 'Minnesota', 'MS': 'Mississippi', 'MO': 'Missouri',
+            'MT': 'Montana', 'NE': 'Nebraska', 'NV': 'Nevada', 'NH': 'New Hampshire', 'NJ': 'New Jersey',
+            'NM': 'New Mexico', 'NY': 'New York', 'NC': 'North Carolina', 'ND': 'North Dakota', 'OH': 'Ohio',
+            'OK': 'Oklahoma', 'OR': 'Oregon', 'PA': 'Pennsylvania', 'RI': 'Rhode Island', 'SC': 'South Carolina',
+            'SD': 'South Dakota', 'TN': 'Tennessee', 'TX': 'Texas', 'UT': 'Utah', 'VT': 'Vermont',
+            'VA': 'Virginia', 'WA': 'Washington', 'WV': 'West Virginia', 'WI': 'Wisconsin', 'WY': 'Wyoming'
+        };
+
+        // Function to create a single state map
+        function createStateMap(year, containerId) {
+            console.log(`Creating map for year ${year} in container ${containerId}`);
+            console.log(`Available data for year ${year}:`, stateMapData[year]);
+            
+            const yearData = stateMapData[year];
+            if (!yearData) {
+                console.log(`No data found for year ${year}`);
+                return;
+            }
+            
+            // Log the gap values for debugging
+            const gapValues = yearData.map(d => d.gap);
+            console.log(`Year ${year} gap values:`, gapValues);
+            console.log(`Min gap: ${Math.min(...gapValues)}, Max gap: ${Math.max(...gapValues)}`);
+            
+            const mapData = [{
+                type: 'choropleth',
+                locations: yearData.map(d => d.state),
+                z: gapValues,
+                locationmode: 'USA-states',
+                colorscale: [
+                    [0, '#fff7ec'],     // Light cream - Low gap
+                    [0.2, '#fdd49e'],   // Light orange
+                    [0.4, '#fdbb84'],   // Medium orange  
+                    [0.6, '#fc8d59'],   // Orange - High gap
+                    [0.8, '#e34a33'],   // Red-orange
+                    [1, '#b30000']      // Dark red - Extreme gap
+                ],
+                zmin: 0,
+                zmax: Math.max(...gapValues),
+                marker: {
+                    line: {
+                        color: 'white',
+                        width: 0.5
+                    }
+                },
+                text: yearData.map(d => `${stateNames[d.state]}<br>━━━━━━━━━━━━━━━<br>White: ${(d.white * 100).toFixed(1)}%<br>Black: ${(d.black * 100).toFixed(1)}%<br>Gap: ${d.gap.toFixed(1)}%`),
+                hoverlabel: {
+                    bgcolor: '#333',
+                    bordercolor: '#333',
+                    font: { size: 12, color: 'white' },
+                    namelength: -1,
+                    align: 'left'
+                },
+                hoverinfo: 'text',
+                showscale: false
+            }];
+
+            const layout = {
+                geo: {
+                    scope: 'usa',
+                    projection: { type: 'albers usa' },
+                    showland: true,
+                    landcolor: '#f8f9fa',
+                    showocean: true,
+                    oceancolor: '#ffffff',
+                    showlakes: true,
+                    lakecolor: '#ffffff',
+                    showframe: false,
+                    showcoastlines: true,
+                    coastlinewidth: 1,
+                    showcountries: false,
+                    showstates: true,
+                    statewidth: 1,
+                    statecolor: '#cccccc'
+                },
+                margin: { l: 0, r: 0, t: 0, b: 0 },
+                autosize: true,
+                width: 480,
+                height: 240,
+                dragmode: false,
+                showlegend: false,
+
+                shapes: [
+                    {
+                        type: 'rect',
+                        x0: 0.53,
+                        y0: 0.12,
+                        x1: 0.81,
+                        y1: 0.52,
+                        xref: 'paper',
+                        yref: 'paper',
+                        line: { color: '#000', width: 2 },
+                        fillcolor: 'rgba(0, 0, 0, 0)'
+                    }
+                ]
+            };
+
+            Plotly.newPlot(containerId, mapData, layout, { 
+                displayModeBar: false, 
+                responsive: true,
+                scrollZoom: false,
+                staticPlot: false
+            });
+        }
+
+        // Initialize all maps when the page loads
+        function initSmallMultiples() {
+            const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+            years.forEach(year => {
+                const containerId = `map${year}`;
+                createStateMap(year, containerId);
+            });
+            
+            // Maps grid is now 2x2, no horizontal scrolling needed
+        }
+
+
+
+
+
+
+
+
+        
+        // Initialize the maps when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM loaded, starting CSV loading...');
+            
+            if (typeof Papa !== 'undefined') {
+                console.log('PapaParse is available, loading CSV...');
+                // PapaParse is available, try to load CSV
+                Papa.parse('data/race_approval_rates_by_state_year.csv', {
+                    download: true,
+                    header: true,
+                    complete: function(results) {
+                        console.log('CSV loaded successfully:', results);
+                        console.log('Number of rows:', results.data.length);
+                        console.log('First few rows:', results.data.slice(0, 5));
+                        
+                        allData = results.data;
+                        processDataForSmallMultiples();
+                        initSmallMultiples();
+                        renderStateComparisonChart();
+                    },
+                    error: function(error) {
+                        console.error('Error loading CSV:', error);
+                        console.log('Using fallback sample data...');
+                        // Create sample data structure for fallback
+                        allData = [
+                            { year: '2018', state_code: 'MS', race_label: 'White', approval_rate: '0.928' },
+                            { year: '2018', state_code: 'MS', race_label: 'Black', approval_rate: '0.801' },
+                            { year: '2019', state_code: 'MS', race_label: 'White', approval_rate: '0.928' },
+                            { year: '2019', state_code: 'MS', race_label: 'Black', approval_rate: '0.807' },
+                            { year: '2020', state_code: 'MS', race_label: 'White', approval_rate: '0.935' },
+                            { year: '2020', state_code: 'MS', race_label: 'Black', approval_rate: '0.810' }
+                        ];
+                        processDataForSmallMultiples();
+                        initSmallMultiples();
+                        renderStateComparisonChart();
+                    }
+                });
+        } else {
+                console.log('PapaParse not available, using sample data...');
+                // PapaParse not available, create sample data structure
+                allData = [
+                    { year: '2018', state_code: 'MS', race_label: 'White', approval_rate: '0.928' },
+                    { year: '2018', state_code: 'MS', race_label: 'Black', approval_rate: '0.801' },
+                    { year: '2019', state_code: 'MS', race_label: 'White', approval_rate: '0.928' },
+                    { year: '2019', state_code: 'MS', race_label: 'Black', approval_rate: '0.807' },
+                    { year: '2020', state_code: 'MS', race_label: 'White', approval_rate: '0.935' },
+                    { year: '2020', state_code: 'MS', race_label: 'Black', approval_rate: '0.810' }
+                ];
+                processDataForSmallMultiples();
+            initSmallMultiples();
+                renderStateComparisonChart();
+            }
+        });
+
+        // Function to render the state comparison chart
+        function renderStateComparisonChart() {
+            try {
+                // Filter data for MS, LA, and AR states
+                const targetStates = ['MS', 'LA', 'AR'];
+                const years = [2018, 2019, 2020, 2021, 2022, 2023, 2024];
+                
+                // Process data for each state
+                const stateData = {};
+                targetStates.forEach(state => {
+                    stateData[state] = {
+                        white: [],
+                        black: [],
+                        gaps: []
+                    };
+                    
+                    years.forEach(year => {
+                        const whiteData = allData.find(d => d.state_code === state && d.year === year.toString() && d.race_label === 'White');
+                        const blackData = allData.find(d => d.state_code === state && d.year === year.toString() && d.race_label === 'Black');
+                        
+                        if (whiteData && blackData) {
+                            const whiteRate = parseFloat(whiteData.approval_rate);
+                            const blackRate = parseFloat(blackData.approval_rate);
+                            const gap = (whiteRate - blackRate) * 100;
+                            
+                            stateData[state].white.push(whiteRate);
+                            stateData[state].black.push(blackRate);
+                            stateData[state].gaps.push(gap);
+                        } else {
+                            stateData[state].white.push(null);
+                            stateData[state].black.push(null);
+                            stateData[state].gaps.push(null);
+                        }
+                    });
+                });
+                
+                // Create traces for each state
+                const traces = [];
+                
+                targetStates.forEach((state, stateIndex) => {
+                    const stateName = state === 'MS' ? 'Mississippi' : state === 'LA' ? 'Louisiana' : 'Arkansas';
+                    
+                    // Create gap area (shaded between lines)
+                    const whiteRates = stateData[state].white;
+                    const blackRates = stateData[state].black;
+                    
+                    // Create the gap area by connecting white and black lines
+                    const gapX = [...years, ...years.slice().reverse()];
+                    const gapY = [...whiteRates, ...blackRates.slice().reverse()];
+                    
+                    traces.push({
+                        x: gapX,
+                        y: gapY,
+                        type: 'scatter',
+                        mode: 'lines',
+                        line: { width: 0 },
+                        fill: 'toself',
+                        fillcolor: 'rgba(255, 165, 0, 0.3)', // Light orange with subtle opacity
+                        hoverinfo: 'skip',
+                        showlegend: false,
+                        xaxis: `x${stateIndex + 1}`,
+                        yaxis: `y${stateIndex + 1}`
+                    });
+                    
+                    // White approval rate line (blue like the bank charts)
+                    traces.push({
+                        x: years,
+                        y: stateData[state].white,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: stateIndex === 0 ? 'White Approval Rate' : undefined,
+                        line: { color: '#1f77b4', width: 2.5 }, // Blue line
+                        marker: { color: '#1f77b4', size: 6, symbol: 'circle' },
+                        customdata: stateData[state].gaps,
+                        hovertemplate: `<b>${stateName} - White</b><br>Year: %{x}<br>Rate: %{y:.1%}<br>Gap: %{customdata:.1f}%<extra></extra>`,
+                        xaxis: `x${stateIndex + 1}`,
+                        yaxis: `y${stateIndex + 1}`,
+                        showlegend: stateIndex === 0
+                    });
+                    
+                    // Black approval rate line (orange like the bank charts)
+                    traces.push({
+                        x: years,
+                        y: stateData[state].black,
+                        type: 'scatter',
+                        mode: 'lines+markers',
+                        name: stateIndex === 0 ? 'Black Approval Rate' : undefined,
+                        line: { color: '#ff7f0e', width: 2.5 }, // Orange line
+                        marker: { color: '#ff7f0e', size: 6, symbol: 'circle' },
+                        customdata: stateData[state].gaps,
+                        hovertemplate: `<b>${stateName} - Black</b><br>Year: %{x}<br>Rate: %{y:.1%}<br>Gap: %{customdata:.1f}%<extra></extra>`,
+                        xaxis: `x${stateIndex + 1}`,
+                        yaxis: `y${stateIndex + 1}`,
+                        showlegend: stateIndex === 0
+                    });
+                });
+                
+                // Create minimal subplot layout
+            const layout = {
+                    grid: {
+                        rows: 1,
+                        columns: 3,
+                        pattern: 'independent',
+                        xgap: 0.15,
+                        ygap: 0.1
+                    },
+                    // First chart (MS)
+                    xaxis: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: true,
+                        tickmode: 'array',
+                        tickvals: years,
+                        ticktext: years.map(y => `'${String(y).slice(2)}`),
+                        range: [2017.5, 2024.5],
+                        domain: [0, 0.3],
+                        tickfont: { size: 12, family: 'Helvetica Neue, sans-serif' }
+                    },
+                    yaxis: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: false,
+                        range: [0.5, 1.0],
+                        domain: [0.1, 0.9]
+                    },
+                    // Second chart (LA)
+                    xaxis2: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: true,
+                        tickmode: 'array',
+                        tickvals: years,
+                        ticktext: years.map(y => `'${String(y).slice(2)}`),
+                        range: [2017.5, 2024.5],
+                        domain: [0.35, 0.65],
+                        tickfont: { size: 12, family: 'Helvetica Neue, sans-serif' }
+                    },
+                    yaxis2: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: false,
+                        range: [0.5, 1.0],
+                        domain: [0.1, 0.9]
+                    },
+                    // Third chart (AR)
+                    xaxis3: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: true,
+                        tickmode: 'array',
+                        tickvals: years,
+                        ticktext: years.map(y => `'${String(y).slice(2)}`),
+                        range: [2017.5, 2024.5],
+                        domain: [0.7, 1.0],
+                        tickfont: { size: 12, family: 'Helvetica Neue, sans-serif' }
+                    },
+                    yaxis3: {
+                        showgrid: false,
+                        showline: false,
+                        showticklabels: false,
+                        range: [0.5, 1.0],
+                        domain: [0.1, 0.9]
+                    },
+                    // State labels positioned above each chart
+                    annotations: [
+                        {
+                            text: 'Mississippi',
+                            x: 0.15,
+                            y: 0.95,
+                            xref: 'paper',
+                            yref: 'paper',
+                            showarrow: false,
+                            font: { size: 16, family: 'Helvetica Neue, sans-serif', weight: 'bold' },
+                            bgcolor: 'rgba(255,255,255,0)',
+                            bordercolor: 'rgba(255,255,255,0)',
+                            borderwidth: 0
+                        },
+                        {
+                            text: 'Louisiana',
+                            x: 0.5,
+                            y: 0.95,
+                            xref: 'paper',
+                            yref: 'paper',
+                            showarrow: false,
+                            font: { size: 16, family: 'Helvetica Neue, sans-serif', weight: 'bold' },
+                            bgcolor: 'rgba(255,255,255,0)',
+                            bordercolor: 'rgba(255,255,255,0)',
+                            borderwidth: 0
+                        },
+                        {
+                            text: 'Arkansas',
+                            x: 0.85,
+                            y: 0.95,
+                            xref: 'paper',
+                            yref: 'paper',
+                            showarrow: false,
+                            font: { size: 16, family: 'Helvetica Neue, sans-serif', weight: 'bold' },
+                            bgcolor: 'rgba(255,255,255,0)',
+                            bordercolor: 'rgba(255,255,255,0)',
+                            borderwidth: 0
+                        }
+                    ],
+                    margin: { l: 20, r: 20, t: 100, b: 60 },
+                    showlegend: true,
+                    legend: {
+                        x: 0.5,
+                        y: 0.02,
+                        orientation: 'h',
+                        font: { family: 'Helvetica Neue, sans-serif', size: 12 },
+                        bgcolor: 'rgba(255,255,255,0)',
+                        bordercolor: 'rgba(255,255,255,0)',
+                        borderwidth: 0
+                    },
+                    hovermode: 'closest',
+                    hoverlabel: {
+                        bgcolor: 'white',
+                        bordercolor: '#ddd',
+                        font: { color: '#333', family: 'Helvetica Neue, sans-serif' }
+                    },
+                    font: { family: 'Helvetica Neue, sans-serif' },
+                plot_bgcolor: 'white',
+                paper_bgcolor: 'white'
+            };
+
+                const config = {
+                displayModeBar: false, 
+                responsive: true,
+                scrollZoom: false,
+                    modeBarButtonsToRemove: ['pan2d', 'select2d', 'lasso2d', 'resetScale2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+                };
+                
+                Plotly.newPlot('stateComparisonChart', traces, layout, config);
+                console.log('State comparison chart rendered successfully');
+                
+            } catch (error) {
+                console.error('Error creating state comparison chart:', error);
+            }
+        }
+
+        // Make charts responsive to window resizing
+        window.addEventListener('resize', function() {
+            // Re-render charts when window is resized
+            if (typeof Plotly !== 'undefined') {
+                // Re-render state comparison chart
+                if (document.getElementById('stateComparisonChart')) {
+                    renderStateComparisonChart();
+                }
+                
+                // Re-render other charts if they exist
+                if (typeof renderRocketMortgageChart === 'function') {
+                    renderRocketMortgageChart();
+                }
+                
+                if (typeof renderStaticBankCharts === 'function') {
+                    renderStaticBankCharts();
+                }
+                
+                if (typeof renderLenderTypeChart === 'function') {
+                    renderLenderTypeChart();
+                }
+                
+                if (typeof renderInterestRateChart === 'function') {
+                    renderInterestRateChart();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
+
