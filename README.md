@@ -1,184 +1,84 @@
-# Racial Equity in Lending: A Promise That Didn't Last
+# Racial Equity in Mortgage Lending: Methodology, Analysis, and Visualizations
 
 ## Overview
-This repository contains the data, analysis, and interactive visualizations for a thesis examining racial equity commitments in mortgage lending and their subsequent rollback under the Trump administration's 2025 executive order.
+This repository contains the data, code, and visualizations for a thesis examining racial equity commitments in U.S. mortgage lending, the persistence of approval gaps for Black and Latino borrowers, and shifts in diversity, equity, and inclusion (DEI) language in bank annual reports.
 
 ## Project Structure
 
 ```
-hmda-thesis-github/
-├── index.html                 # Main interactive thesis webpage
+hmda-thesis/
+├── data/                         # Cleaned datasets, drop logs, and intermediate CSV files
+├── notebooks/
+│   ├── filter_2018_strict_only_race_expanded.ipynb   # HMDA data cleaning, strict filtering, and approval gap calculation
+│   ├── bloomberg_lei.ipynb                           # Bloomberg scraping to fill missing lender names
+│   ├── reports_scraping.ipynb                        # Annual report scraping and DEI term counting
+├── docs/
+│   ├── MP_methodology.pdf         # Full written methodology
 ├── assets/
-│   ├── images/
-│   │   └── exec_order/        # Executive order images for scrollytelling
-│   ├── charts/                # Key charts and visualizations
-│   └── maps/                  # Geographic visualizations
-├── data/                      # All CSV data files
-├── notebooks/                 # Jupyter notebooks for analysis
-└── docs/                      # Documentation and methodology
+│   ├── charts/                    # Static visualizations
+│   ├── maps/                      # Choropleth maps
+└── index.html                     # Interactive scrollytelling page
 ```
 
-## Key Findings
+## Methodology Summary
 
-### Executive Order Impact
-- **January 20, 2025**: President Trump signed executive order ending diversity programs
-- **Disparate Impact Doctrine**: Key enforcement mechanism of Fair Housing Act removed
-- **Regulatory Rollback**: Banks no longer held accountable for racial gaps without proof of explicit bias
+### 1. Building the Lending Dataset
+- **Data Source**: Public **Home Mortgage Disclosure Act (HMDA)** files for 2018–2024 (~124M records).
+- **Cleaning Steps**:
+  - Standardized borrower race codes (including Asian subgroups) and ethnicity fields.
+  - Converted all financial fields (income, loan amount, property value, DTI) to numeric.
+  - Created a unique row ID by concatenating lender **Legal Entity Identifier (LEI)** with the record index.
+- **Strict Filter Criteria** (matched to regulatory/academic standards):
+  1. Conventional (loan_type = 1) first-lien mortgages.
+  2. Owner-occupied, site-built properties with ≤4 units.
+  3. Complete data for income, loan amount, property value, and DTI.
+  4. Applications coded as originated, approved but not accepted, or denied.
+- Result: ~10M comparable records per year.
 
-### JPMorgan Chase Case Study
-- **2020**: $30 billion racial equity commitment, 17 mentions in annual report
-- **2021**: Strong language maintained, 16 racial equity references
-- **2022**: Shift to "long-term impact," mentions dropped to 7
-- **2023-2024**: Retreat from explicit racial equity commitments
+_Notebook_: `filter_2018_strict_only_race_expanded.ipynb`
 
-### Lending Disparities
-- **Approval Rate Gaps**: Black borrowers consistently approved at lower rates than White borrowers
-- **Geographic Patterns**: Highest denial rates in states with histories of racial exclusion
-- **Bank vs Non-Bank**: Non-bank lenders charge higher fees while filling lending gaps
+### 2. Calculating Approval Rate Gaps
+- Grouped by lender, state, year, and race.
+- Approval rate = approvals ÷ total applications.
+- **Gap** = White approval rate − Black approval rate (and − Latino rate where ethnicity available).
+- Also calculated median loan amounts by race/year.
+- Exported summary CSVs for visualization.
 
-## Data Sources
+### 3. Resolving Lender Name Gaps
+- HMDA lists lenders by LEI; some names missing in initial mapping.
+- Wrote asynchronous scraper using **Playwright** to:
+  - Open Bloomberg company profile.
+  - Extract legal name text and match to LEI.
+- Manually cross-checked remaining names for accuracy.
 
-### Primary Data
-- **HMDA Database**: 15+ million mortgage records (2018-2024)
-- **Bank Annual Reports**: JPMorgan Chase, Bank of America, Wells Fargo
-- **Federal Reserve**: Interest rate and lending data
-- **DOJ Settlements**: Redlining enforcement cases
-- **Bloomberg Terminal**: Financial data and lender information
+_Notebook_: `bloomberg_lei.ipynb`
 
-### Key Datasets
-- `race_approval_rates_by_state_year.csv`: State-level approval rates by race and year
-- `bank_race_summary.csv`: Bank-specific approval rate disparities
-- `bank_nonbank_interest_rate_by_race_year.csv`: Interest rate differences by lender type
-- `merged_by_race_cleaned.csv`: Top lender analysis by race
-- `state_race_summary.csv`: Geographic lending patterns
-- `bloomberg_scraped_structured.csv`: Bloomberg financial data for lender analysis
+### 4. Analyzing Corporate Language
+- **Source**: Annual reports for largest banks (and available reports for major non-banks).
+- Extracted text with **PyMuPDF** for consistent parsing.
+- Counted case-insensitive matches of curated DEI terms (full list in methodology PDF).
+- Observed:
+  - Sharp rise in explicit racial equity terms in 2020–2021.
+  - Decline in 2022–2024, replaced by euphemisms like “economic mobility” and “financial inclusion.”
 
-## Interactive Features
+_Notebook_: `reports_scraping.ipynb`
 
-### Charts and Visualizations
-1. **Bank Approval Rate Disparities**: Interactive charts showing White vs Black approval gaps
-2. **State Comparison Maps**: Geographic visualization of lending disparities
-3. **Temporal Analysis**: Year-over-year changes in racial equity commitments
-4. **Lender Type Analysis**: Bank vs non-bank lending patterns
+### 5. Cross-Checking with Experts and Enforcement Actions
+- Interviews with fair lending experts for context.
+- Reviewed DOJ redlining cases under the **Combatting Redlining Initiative**.
+- Incorporated April 2025 policy change: end of DEI programs and halt to disparate-impact enforcement.
 
-### Scrollytelling Elements
-- **Executive Order Timeline**: Interactive exploration of policy changes
-- **JPMorgan Commitment Evolution**: Visual tracking of language changes
-- **Geographic Patterns**: State-level lending disparity maps
+## Key Outputs
+- **Choropleth Maps**: State-level approval gaps.
+- **Time Series**: Approval rates by bank/race.
+- **DEI Language Trends**: Term frequency over time in annual reports.
+- **Scrollytelling Page**: Integrates visuals and narrative (`index.html`).
 
-## Methodology
+## Limitations
+- Public HMDA data omits credit scores and other underwriting variables.
+- Latino borrower analysis depends on sometimes incomplete ethnicity field.
+- DEI term lists cannot capture all euphemisms.
+- Non-bank lenders rarely publish detailed annual reports.
 
-### Data Processing
-- **Filtering**: Strict criteria for complete race and approval data
-- **Aggregation**: State, year, and race-level summaries
-- **Gap Calculation**: White approval rate minus Black approval rate
-- **Statistical Analysis**: Significance testing and trend analysis
-
-### Visualization Approach
-- **Minimal Design**: Clean, professional aesthetic matching academic standards
-- **Responsive Layout**: Works across all device sizes
-- **Interactive Elements**: Hover tooltips with detailed information
-- **Accessibility**: High contrast, clear typography, descriptive labels
-
-## Key Charts
-
-### 1. Approval Rate Disparities by Bank
-- **JPMorgan Chase**: ~6 percentage point gap
-- **Bank of America**: ~2 percentage point gap (smallest)
-- **Wells Fargo**: Double-digit gaps, narrowing after 2023
-
-### 2. Geographic Patterns
-- **Mississippi, Louisiana, Arkansas**: 14+ percentage point gaps
-- **Historical Context**: States with histories of racial exclusion
-- **Temporal Trends**: Persistent disparities 2018-2024
-
-### 3. Lender Type Analysis
-- **Non-Bank Dominance**: 61%+ of single-family mortgages by 2022
-- **Fee Structure**: 24.7% higher setup fees than banks
-- **Access Patterns**: Higher approval rates but higher costs
-
-## Technical Implementation
-
-### Frontend Technologies
-- **HTML5/CSS3**: Semantic structure and responsive design
-- **JavaScript**: Interactive charts and data processing
-- **Plotly.js**: Chart rendering and interactivity
-- **D3.js**: Geographic visualizations and data manipulation
-
-### Data Processing
-- **Python**: Jupyter notebooks for analysis
-- **Pandas**: Data manipulation and aggregation
-- **Matplotlib/Seaborn**: Static chart generation
-- **CSV Export**: Clean data for web integration
-- **Web Scraping**: Bloomberg Terminal data collection
-
-### Responsive Design
-- **Mobile-First**: Optimized for all screen sizes
-- **CSS Grid/Flexbox**: Modern layout techniques
-- **Media Queries**: Adaptive styling across breakpoints
-- **Touch-Friendly**: Optimized for mobile interaction
-
-## Installation and Usage
-
-### Local Development
-1. Clone the repository
-2. Open `index.html` in a web browser
-3. Ensure all data files are in the `data/` directory
-4. For development, use a local server (e.g., Python `http.server`)
-
-### Data Updates
-1. Place new CSV files in the `data/` directory
-2. Update file paths in `index.html` if necessary
-3. Test all visualizations with new data
-
-### Customization
-- **Charts**: Modify Plotly configurations in JavaScript functions
-- **Styling**: Update CSS variables and classes
-- **Data**: Replace CSV files with new datasets
-- **Content**: Edit HTML structure and text content
-
-## Dependencies
-
-### Web Dependencies
-- Plotly.js (CDN)
-- PapaParse (CSV parsing)
-- D3.js (geographic visualizations)
-
-### Development Dependencies
-- Python 3.8+
-- Jupyter Notebook
-- Pandas
-- Matplotlib
-- Seaborn
-
-## Contributing
-
-### Guidelines
-- Maintain academic rigor and data accuracy
-- Follow responsive design principles
-- Ensure accessibility compliance
-- Document all data sources and methodology
-
-### Code Style
-- Clean, readable HTML/CSS/JavaScript
-- Consistent naming conventions
-- Comprehensive commenting
-- Error handling for data loading
-
-## License and Attribution
-
-### Data Sources
-- **HMDA**: Home Mortgage Disclosure Act database
-- **Bank Reports**: Public annual reports and filings
-- **Federal Data**: Public government datasets
-
-### Academic Use
-This project is intended for academic research and public education about racial equity in lending. All data sources are publicly available and properly attributed.
-
-## Contact
-
-For questions about methodology, data sources, or technical implementation, please refer to the documentation in the `docs/` directory or review the Jupyter notebooks in the `notebooks/` folder.
-
----
-
-**Note**: This repository contains sensitive data about racial disparities in lending. Please use this information responsibly and in accordance with academic and ethical guidelines.
+## Reproducibility
+All processing is documented in the Jupyter notebooks. The **strict filter** and term-counting logic are parameterized for re-use with future HMDA releases and corporate filings.
