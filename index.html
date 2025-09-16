@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Racial Equity in Lending Was a Promise. It Didn't Last.</title>
+    <link rel="icon" type="image/png" href="website-logo.png">
             <link rel="preconnect" href="https://fonts.googleapis.com">
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Helvetica+Neue:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -26,7 +27,6 @@
             margin: 0;
             padding: 0;
             background-color: white;
-            margin-left: 150px;
         }
         
         html, body {
@@ -47,7 +47,9 @@
             padding: 2rem;
             max-width: 800px;
             background: white;
-            margin: 0 auto 0 300px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
         }
         
         .header-section {
@@ -69,6 +71,7 @@
             height: 100vh;
             overflow: hidden;
             margin-left: 100px;
+            z-index: 10;
         }
         
         .scroller-container {
@@ -211,19 +214,119 @@
                 flex-direction: column;
             }
             
+            .content-section {
+                margin: 0 auto;
+                padding: 1.5rem;
+                max-width: 100%;
+            }
+            
+            .header-section {
+                height: auto;
+                min-height: 60vh;
+                padding: 2rem 1.5rem;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+                line-height: 1.2;
+            }
+            
+            h2 {
+                font-size: 2rem;
+            }
+            
             .scrolly-section {
                 width: 100%;
                 height: auto;
                 position: relative;
+                order: -1; /* Place scrolly section before content on mobile */
+                margin-left: 0;
+                margin-bottom: 2rem;
+                background: transparent;
+                padding: 1rem;
             }
             
             .scroller-container {
                 height: auto;
+                max-height: 400px;
+                overflow-y: auto;
             }
             
             .slide {
                 height: auto;
-                min-height: 200px;
+                min-height: 120px;
+                padding: 15px 20px;
+                margin-bottom: 1rem;
+                background: transparent;
+            }
+            
+            .slide-date {
+                font-size: 0.8rem;
+                margin-bottom: 6px;
+            }
+            
+            .slide-announcement {
+                font-size: 1rem;
+                line-height: 1.4;
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .content-section {
+                padding: 1rem;
+                margin: 0;
+            }
+            
+            .header-section {
+                min-height: 50vh;
+                padding: 1.5rem 1rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+                line-height: 1.1;
+                margin-bottom: 1.5rem;
+            }
+            
+            h2 {
+                font-size: 1.75rem;
+                margin-top: 2rem;
+                margin-bottom: 1rem;
+            }
+            
+            h3 {
+                font-size: 1.25rem;
+            }
+            
+            p {
+                font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 1rem;
+            }
+            
+            .byline1 {
+                font-size: 0.9rem;
+                margin-bottom: 2rem;
+            }
+            
+            .scrolly-section {
+                margin: 0 1rem 2rem 1rem;
+                padding: 0.5rem;
+            }
+            
+            .slide {
+                padding: 12px 16px;
+                min-height: 100px;
+                background: transparent;
+            }
+            
+            .slide-date {
+                font-size: 0.75rem;
+            }
+            
+            .slide-announcement {
+                font-size: 0.9rem;
             }
         }
 
@@ -271,19 +374,65 @@
             font-weight: 400 !important;
             margin-top: 0.5rem;
         }
-        @media (max-widt: 1200px) {
+        @media (max-width: 1200px) {
             .bank-grid {
                 grid-template-columns: repeat(2, 1fr);
                 max-width: 1400px;
+                gap: 2rem;
             }
         }
         @media (max-width: 800px) {
             .bank-grid {
                 grid-template-columns: 1fr;
-                max-width: 800px;
+                max-width: 100%;
+                gap: 1.5rem;
+                margin: 1rem 0 2rem 0;
             }
-            .bank-chart {
-                height: 250px;
+        }
+        
+        @media (max-width: 480px) {
+            .content-section {
+                padding: 0.75rem;
+            }
+            
+            .header-section {
+                min-height: 40vh;
+                padding: 1rem 0.75rem;
+            }
+            
+            h1 {
+                font-size: 1.75rem;
+                line-height: 1.1;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            h3 {
+                font-size: 1.1rem;
+            }
+            
+            p {
+                font-size: 0.95rem;
+            }
+            
+            .scrolly-section {
+                margin: 0 0.5rem 1.5rem 0.5rem;
+                padding: 0.25rem;
+            }
+            
+            .slide {
+                padding: 10px 12px;
+                min-height: 80px;
+            }
+            
+            .slide-date {
+                font-size: 0.7rem;
+            }
+            
+            .slide-announcement {
+                font-size: 0.85rem;
             }
         }
 
@@ -440,36 +589,12 @@
                 grid-template-columns: repeat(2, 1fr);
                 gap: 0.001rem;
             }
-            
-            .content-section {
-                margin: 0 auto 0 100px;
-                max-width: 600px;
-            }
-            
-            .small-multiples-section {
-                margin: 0 auto 0 100px;
-                max-width: 600px;
-            }
         }
         
         @media (max-width: 600px) {
             .maps-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 0.001rem;
-            }
-            
-            .content-section {
-                margin: 0 auto 0 50px;
-                max-width: 90vw;
-            }
-            
-            .small-multiples-section {
-                margin: 0 auto 0 50px;
-                max-width: 90vw;
-            }
-            
-            .maps-grid {
                 grid-template-columns: 1fr;
+                gap: 0.001rem;
             }
             
             /* Make charts responsive on small screens */
@@ -749,7 +874,7 @@
             <section>
                 <h2>A shift in tone</h2>
                 
-                <p>Among the three largest U.S. mortgage banks, references to racial equity with phrases like ‘racial equity’, ‘racial equality’, in annual reports spiked in the early 2020s, then fell sharply.  JPMorgan and Bank of America peaked in 2020, while Wells Fargo’s use of racial equity language reached its high point in 2022, before a sharp decline in 2024.</p>
+                <p>Among the three largest U.Ss. mortgage banks, references to racial equity with phrases like ‘racial equity’, ‘racial equality’, in annual reports spiked in the early 2020s, then fell sharply.  JPMorgan and Bank of America peaked in 2020, while Wells Fargo’s use of racial equity language reached its high point in 2022, before a sharp decline in 2024.</p>
                 
                 <div class="visual-placeholder">
                     <h4>Banks Scaled Back DEI Language After 2020</h4>
@@ -1091,11 +1216,27 @@
             const contentTop = contentSection.offsetTop;
             const scrollPosition = window.pageYOffset;
             
-            if (scrollPosition > contentTop + 100) {
-                scrollySection.style.opacity = '0';
-                scrollySection.style.transition = 'opacity 0.5s ease';
-            } else {
+            // Only apply opacity changes on desktop (when scrolly section is sticky)
+            if (window.innerWidth > 1200) {
+                if (scrollPosition > contentTop + 100) {
+                    scrollySection.style.opacity = '0';
+                    scrollySection.style.transition = 'opacity 0.5s ease';
+                } else {
+                    scrollySection.style.opacity = '1';
+                }
+            }
+        });
+        
+        // Handle window resize to reset scrolly section behavior
+        window.addEventListener('resize', () => {
+            const scrollySection = document.querySelector('.scrolly-section');
+            if (window.innerWidth <= 1200) {
+                // Reset opacity on mobile
                 scrollySection.style.opacity = '1';
+                scrollySection.style.transition = 'none';
+            } else {
+                // Re-enable transition on desktop
+                scrollySection.style.transition = 'opacity 0.5s ease';
             }
         });
 
